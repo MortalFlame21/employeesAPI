@@ -1,0 +1,19 @@
+{
+  "name": "employeesapi",
+  "version": "1.0.0",
+  "description": "A API that communicates with Express.js, Prisma and NeonDB that stores employee data.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
