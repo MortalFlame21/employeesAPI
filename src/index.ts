@@ -4,6 +4,7 @@ import express, {
   Request,
   Response,
 } from "express";
+import routes from "./routes/routes.js";
 
 const app = express();
 
@@ -14,6 +15,8 @@ const PORT = process.env.PORT || 5000;
 app.get("/", (req, res) => {
   res.send("Welcome to the EmployeesApi!");
 });
+
+app.use("/", routes);
 
 app.use(
   (
