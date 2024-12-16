@@ -1,15 +1,26 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { jsonParseBigInt } from "../utils/jsonUtils.js";
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
 // get employee by id
-router.get("/:id", (req, res) => {
-  res.send("get employee by id");
+router.get("/:id", async (req, res) => {
+  const employee = await prisma.employee.findFirst({
+    where: { id: parseInt(req.params.id) },
+  });
+  const parsedEmployee = jsonParseBigInt(employee);
+  res.json(parsedEmployee);
 });
 
-// get employee by name
-router.get("/name/:name", (req, res) => {
-  res.send("get employee by name");
+// get employee by first name
+router.get("/firstName/:name", async (req, res) => {
+  const employee = await prisma.employee.findFirst({
+    where: { first_name: req.params.name },
+  });
+  const parsedEmployee = jsonParseBigInt(employee);
+  res.send(parsedEmployee);
 });
 
 // get all employees
@@ -33,8 +44,12 @@ router.delete("/:id", (req, res) => {
 });
 
 // get salary of employee by id
-router.get("/:id/salary", (req, res) => {
-  res.send("get salary of employee by id");
+router.get("/:id/salary", async (req, res) => {
+  const employeeSalary = await prisma.salary.findFirst({
+    where: { employee_id: parseInt(req.params.id) },
+  });
+  const parsedSalary = jsonParseBigInt(employeeSalary);
+  res.json(parsedSalary);
 });
 
 // update salary

@@ -25,6 +25,7 @@ app.use(
     res: Response,
     next: NextFunction
   ) => {
+    console.error(err);
     res.status(500).send("Uh oh! An unexpected error occured. :(");
   }
 );
