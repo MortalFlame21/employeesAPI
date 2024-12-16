@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.use("/manager", managerRouter);
 router.use("/department", deptController);
-router.use("/", employeeRouter);
+router.use("/employee", employeeRouter);
 
 export default router;
