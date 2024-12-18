@@ -6,8 +6,26 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // get all employees
-router.get("/", (req, res) => {
-  res.send("get all employees");
+router.get("/", async (req, res) => {
+  let offset = parseInt(req.query.offset as string) || 1;
+  let limit = parseInt(req.query.limit as string) || 10;
+  if (limit > 100) limit = 100;
+
+  const end = offset * limit;
+  const nextPage = `${req.baseUrl}/?offset=${end}&limit=${limit}`;
+
+  const employees = await prisma.employee.findMany({
+    skip: offset,
+    take: limit,
+  });
+  const parsedEmployees = jsonParseBigInt(employees);
+
+  res.json({
+    offset: offset,
+    limit: limit,
+    nextPage: nextPage,
+    results: parsedEmployees,
+  });
 });
 
 // create employee
