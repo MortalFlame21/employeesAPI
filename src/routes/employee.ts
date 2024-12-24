@@ -29,18 +29,62 @@ router.get("/", async (req, res) => {
 });
 
 // create employee
-router.post("/", (req, res) => {
-  res.send("create employee");
+router.post("/", async (req, res) => {
+  const { birthDate, firstName, lastName, gender, hireDate } = req.body;
+
+  const newEmployee = await prisma.employee.create({
+    data: {
+      birth_date: new Date(birthDate),
+      first_name: firstName,
+      last_name: lastName,
+      gender: gender,
+      hire_date: new Date(hireDate),
+    },
+  });
+
+  res.json({ new_employee: newEmployee });
 });
 
-// get normal employees, non-managers
-router.get("/normal", async (req, res) => {
-  // const titles = await prisma.title.findMany({
-  //   distinct: ["title"],
-  //   select: { title: true },
-  // });
-  // const parsedTitle = jsonParseBigInt(titles);
-  // res.send(parsedTitle);
+router.put("/salary", async (req, res) => {
+  const { employeeID, amount, fromDate, toDate } = req.body;
+
+  // check if existing
+  // edit current row (to be old) and edit to_date to fromDate
+
+  const newSalary = await prisma.salary.create({
+    data: {
+      employee_id: employeeID,
+      amount: amount,
+      from_date: new Date(fromDate),
+      to_date: new Date(toDate),
+    },
+  });
+
+  res.json({
+    old_salary: "oldSalary",
+    new_salary: newSalary,
+  });
+});
+
+router.put("/title", async (req, res) => {
+  const { employeeID, title, fromDate, toDate } = req.body;
+
+  // check if existing
+  // edit current row (to be old) and edit to_date to fromDate
+
+  const newTitle = await prisma.title.create({
+    data: {
+      employee_id: employeeID,
+      title: title,
+      from_date: new Date(fromDate),
+      to_date: new Date(toDate),
+    },
+  });
+
+  res.json({
+    old_title: "oldTitle",
+    new_title: newTitle,
+  });
 });
 
 // get employee by id
