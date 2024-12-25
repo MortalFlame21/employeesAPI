@@ -96,11 +96,6 @@ router.get("/:id", async (req, res) => {
   res.json(parsedEmployee);
 });
 
-// update employee
-router.put("/:id", (req, res) => {
-  res.send("update employee");
-});
-
 // delete employee
 router.delete("/:id", (req, res) => {
   res.send("delete employee");
@@ -109,7 +104,12 @@ router.delete("/:id", (req, res) => {
 // get employee by first name
 router.get("/firstName/:name", async (req, res) => {
   const employee = await prisma.employee.findFirst({
-    where: { first_name: req.params.name },
+    where: {
+      first_name: {
+        equals: req.params.name,
+        mode: "insensitive",
+      },
+    },
   });
   const parsedEmployee = jsonParseBigInt(employee);
   res.send(parsedEmployee);
@@ -124,11 +124,6 @@ router.get("/:id/salary", async (req, res) => {
   res.json(parsedSalary);
 });
 
-// update salary
-router.put("/:id/salary", (req, res) => {
-  res.send("update salary");
-});
-
 // get title of employee by id
 router.get("/:id/title", async (req, res) => {
   const employeeTitle = await prisma.title.findFirst({
@@ -136,11 +131,6 @@ router.get("/:id/title", async (req, res) => {
   });
   const parsedTitle = jsonParseBigInt(employeeTitle);
   res.json(parsedTitle);
-});
-
-// update title
-router.put("/:id/title", (req, res) => {
-  res.send("update title");
 });
 
 export default router;
