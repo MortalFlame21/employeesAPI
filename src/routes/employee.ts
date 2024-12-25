@@ -116,7 +116,7 @@ router.get("/firstName/:name", async (req, res) => {
 });
 
 // get salary of employee by id
-router.get("/:id/salary", async (req, res) => {
+router.get("/salary/:id", async (req, res) => {
   const employeeSalary = await prisma.salary.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
@@ -125,7 +125,7 @@ router.get("/:id/salary", async (req, res) => {
 });
 
 // get title of employee by id
-router.get("/:id/title", async (req, res) => {
+router.get("/title/:id", async (req, res) => {
   const employeeTitle = await prisma.title.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
