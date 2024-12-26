@@ -53,8 +53,8 @@ router.put("/salary", async (req, res) => {
 
   const newSalary = await prisma.salary.create({
     data: {
-      employee_id: employeeID,
-      amount: amount,
+      employee_id: parseInt(employeeID),
+      amount: parseInt(amount),
       from_date: new Date(fromDate),
       to_date: new Date(toDate),
     },
@@ -74,7 +74,7 @@ router.put("/title", async (req, res) => {
 
   const newTitle = await prisma.title.create({
     data: {
-      employee_id: employeeID,
+      employee_id: parseInt(employeeID),
       title: title,
       from_date: new Date(fromDate),
       to_date: new Date(toDate),
