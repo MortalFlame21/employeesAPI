@@ -97,8 +97,16 @@ router.get("/:id", async (req, res) => {
 });
 
 // delete employee
-router.delete("/:id", (req, res) => {
-  res.send("delete employee");
+router.delete("/", async (req, res) => {
+  const employee = await prisma.employee.delete({
+    where: {
+      id: parseInt(req.body.id),
+    },
+  });
+  const parsedEmployee = jsonParseBigInt(employee);
+  res.json({
+    deletedUser: parsedEmployee,
+  });
 });
 
 // get employee by first name
