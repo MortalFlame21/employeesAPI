@@ -45,6 +45,7 @@ router.post("/", async (req, res) => {
   res.json({ new_employee: newEmployee });
 });
 
+// update employee salary
 router.put("/salary", async (req, res) => {
   const { employeeID, amount, fromDate, toDate } = req.body;
 
@@ -66,6 +67,7 @@ router.put("/salary", async (req, res) => {
   });
 });
 
+// update employee title
 router.put("/title", async (req, res) => {
   const { employeeID, title, fromDate, toDate } = req.body;
 
@@ -84,6 +86,28 @@ router.put("/title", async (req, res) => {
   res.json({
     old_title: "oldTitle",
     new_title: newTitle,
+  });
+});
+
+// update employee department
+router.put("/department", async (req, res) => {
+  const { employeeID, departmentID, fromDate, toDate } = req.body;
+
+  // check if existing
+  // edit current row (to be old) and edit to_date to fromDate
+
+  const newEmployeeDepartment = await prisma.department_employee.create({
+    data: {
+      employee_id: parseInt(employeeID),
+      department_id: departmentID,
+      from_date: new Date(fromDate),
+      to_date: new Date(toDate),
+    },
+  });
+
+  res.json({
+    old_department: "oldDepartment",
+    new_department: newEmployeeDepartment,
   });
 });
 
