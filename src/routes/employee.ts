@@ -120,7 +120,7 @@ router.get("/firstName/:name", async (req, res) => {
     },
   });
   const parsedEmployee = jsonParseBigInt(employee);
-  res.send(parsedEmployee);
+  res.json(parsedEmployee);
 });
 
 // get salary of employee by id
