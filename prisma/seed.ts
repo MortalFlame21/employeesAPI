@@ -14,7 +14,7 @@ const prisma = new PrismaClient({
 type seedEmployeeType = ReturnType<() => (typeof data)["employees"][number]>;
 
 async function main() {
-  // await seedDepartments();
+  await seedDepartments();
   await seedEmployees();
 
   // await seedEmployeeDepartment();
@@ -23,7 +23,18 @@ async function main() {
   // await seedEmployeeManager();
 }
 
-async function seedDepartments() {}
+async function seedDepartments() {
+  const newDepartmentData: department[] = data.departments;
+  Promise.all(
+    newDepartmentData.map((data) =>
+      prisma.department.upsert({
+        where: { id: data.id },
+        update: data,
+        create: data,
+      })
+    )
+  );
+}
 
 async function seedEmployees() {
   const newEmployeeData: employee[] = data.employees.map(
