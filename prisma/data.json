@@ -1,0 +1,121 @@
+{
+  "departments": [
+    {
+      "id": "d010",
+      "dept_name": "gaming"
+    }
+  ],
+  "titles": ["Party Leader", "Senior Gamer"],
+  "employees": [
+    {
+      "id": 500000,
+      "birth_date": "1998-05-06",
+      "first_name": "_Anna",
+      "last_name": "_Dope",
+      "gender": "F",
+      "hire_date": "2023-02-07",
+      "is_manager": true,
+      "salary": 200000
+    },
+    {
+      "id": 500001,
+      "birth_date": "2021-07-09",
+      "first_name": "_Bob",
+      "last_name": "_Swagger",
+      "gender": "M",
+      "hire_date": "2012-09-29",
+      "is_manager": false,
+      "salary": 159642
+    },
+    {
+      "id": 500002,
+      "birth_date": "2009-10-04",
+      "first_name": "_Catlee",
+      "last_name": "_Bagge",
+      "gender": "F",
+      "hire_date": "2019-12-05",
+      "is_manager": false,
+      "salary": 59888
+    },
+    {
+      "id": 500003,
+      "birth_date": "2012-09-25",
+      "first_name": "_Gael",
+      "last_name": "_Simone",
+      "gender": "M",
+      "hire_date": "2013-09-14",
+      "is_manager": false,
+      "salary": 197293
+    },
+    {
+      "id": 500004,
+      "birth_date": "2025-03-12",
+      "first_name": "_Alfie",
+      "last_name": "_Defew",
+      "gender": "M",
+      "hire_date": "2016-10-31",
+      "is_manager": false,
+      "salary": 106849
+    },
+    {
+      "id": 500005,
+      "birth_date": "1994-08-05",
+      "first_name": "_Smitty",
+      "last_name": "_Laflin",
+      "gender": "M",
+      "hire_date": "2021-11-26",
+      "is_manager": false,
+      "salary": 71013
+    },
+    {
+      "id": 500006,
+      "birth_date": "1992-07-28",
+      "first_name": "_Antoine",
+      "last_name": "_Stubbe",
+      "gender": "M",
+      "hire_date": "2023-08-04",
+      "is_manager": false,
+      "salary": 165626
+    },
+    {
+      "id": 500007,
+      "birth_date": "2020-04-05",
+      "first_name": "_Jake",
+      "last_name": "_Cutress",
+      "gender": "M",
+      "hire_date": "2013-03-26",
+      "is_manager": false,
+      "salary": 190062
+    },
+    {
+      "id": 500008,
+      "birth_date": "2010-01-31",
+      "first_name": "_Stillman",
+      "last_name": "_McClancy",
+      "gender": "M",
+      "hire_date": "2023-02-27",
+      "is_manager": false,
+      "salary": 194248
+    },
+    {
+      "id": 500009,
+      "birth_date": "1967-05-24",
+      "first_name": "_Walter",
+      "last_name": "_White",
+      "gender": "M",
+      "hire_date": "2021-03-30",
+      "is_manager": false,
+      "salary": 79632
+    },
+    {
+      "id": 500010,
+      "birth_date": "1970-05-24",
+      "first_name": "_Gus",
+      "last_name": "_Fring",
+      "gender": "M",
+      "hire_date": "2016-03-30",
+      "is_manager": true,
+      "salary": 50000
+    }
+  ]
+}

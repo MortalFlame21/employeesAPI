@@ -1,38 +1,57 @@
-import { employee, employee_gender, PrismaClient } from "@prisma/client";
+import {
+  type department,
+  type employee,
+  employee_gender,
+  PrismaClient,
+} from "@prisma/client";
 
-const prisma = new PrismaClient();
+import data from "@/_prisma/data.json" assert { type: "json" };
 
-type SeedEmployee = Omit<employee, "id">;
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+});
+
+type seedEmployeeType = ReturnType<() => (typeof data)["employees"][number]>;
 
 async function main() {
-  const annaData: SeedEmployee = {
-    birth_date: new Date("2000-04-04"),
-    first_name: "_anna",
-    last_name: "_bando",
-    gender: "F",
-    hire_date: new Date("2023-03-17"),
-  };
-  const bobData: SeedEmployee = {
-    birth_date: new Date("2005-08-19"),
-    first_name: "_bob",
-    last_name: "_swagger",
-    gender: "M",
-    hire_date: new Date("2025-03-17"),
-  };
+  // await seedDepartments();
+  await seedEmployees();
 
-  const anna = await prisma.employee.upsert({
-    where: { id: 500001 },
-    update: annaData,
-    create: annaData,
-  });
-  const bob = await prisma.employee.upsert({
-    where: { id: 500000 },
-    update: bobData,
-    create: bobData,
-  });
-
-  console.log({ anna, bob });
+  // await seedEmployeeDepartment();
+  // await seedEmployeeSalary();
+  // await seedEmployeeTitle();
+  // await seedEmployeeManager();
 }
+
+async function seedDepartments() {}
+
+async function seedEmployees() {
+  const newEmployeeData: employee[] = data.employees.map(
+    ({ id, birth_date, first_name, last_name, gender, hire_date }) => {
+      return {
+        id: BigInt(id),
+        birth_date: new Date(birth_date),
+        first_name,
+        last_name,
+        gender: gender as employee_gender,
+        hire_date: new Date(hire_date),
+      };
+    }
+  );
+
+  for (const data of newEmployeeData) {
+    await prisma.employee.upsert({
+      where: { id: data.id },
+      update: data,
+      create: data,
+    });
+  }
+}
+
+async function seedEmployeeDepartment() {}
+async function seedEmployeeSalary() {}
+async function seedEmployeeTitle() {}
+async function seedEmployeeManager() {}
 
 try {
   await main();
