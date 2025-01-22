@@ -1,13 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "moduleResolution": "NodeNext",
+    "strict": true,
+    "target": "ES2022",
     "module": "NodeNext",
     "outDir": "dist",
-    "strict": true,
+    "moduleResolution": "NodeNext",
+    "sourceMap": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/_prisma/*": ["./prisma/*"]
+    }
   }
 }
