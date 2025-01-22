@@ -1,6 +1,7 @@
 import {
   type department,
   type employee,
+  type department_employee,
   employee_gender,
   PrismaClient,
 } from "@prisma/client";
@@ -17,23 +18,19 @@ async function main() {
   await seedDepartments();
   await seedEmployees();
 
-  // await seedEmployeeDepartment();
+  await seedEmployeeDepartment();
   // await seedEmployeeSalary();
   // await seedEmployeeTitle();
   // await seedEmployeeManager();
 }
 
 async function seedDepartments() {
-  const newDepartmentData: department[] = data.departments;
-  Promise.all(
-    newDepartmentData.map((data) =>
-      prisma.department.upsert({
-        where: { id: data.id },
-        update: data,
-        create: data,
-      })
-    )
-  );
+  const newDeptData: department = data.department;
+  await prisma.department.upsert({
+    where: { id: newDeptData.id },
+    update: newDeptData,
+    create: newDeptData,
+  });
 }
 
 async function seedEmployees() {
@@ -50,16 +47,21 @@ async function seedEmployees() {
     }
   );
 
-  for (const data of newEmployeeData) {
-    await prisma.employee.upsert({
-      where: { id: data.id },
-      update: data,
-      create: data,
-    });
-  }
+  Promise.all(
+    newEmployeeData.map((data) =>
+      prisma.employee.upsert({
+        where: { id: data.id },
+        update: data,
+        create: data,
+      })
+    )
+  );
 }
 
-async function seedEmployeeDepartment() {}
+async function seedEmployeeDepartment() {
+  // const newDepartment;
+}
+
 async function seedEmployeeSalary() {}
 async function seedEmployeeTitle() {}
 async function seedEmployeeManager() {}

@@ -1,10 +1,8 @@
 {
-  "departments": [
-    {
-      "id": "d010",
-      "dept_name": "gaming"
-    }
-  ],
+  "department": {
+    "id": "d010",
+    "dept_name": "_Gaming"
+  },
   "titles": ["Party Leader", "Senior Gamer"],
   "employees": [
     {
