@@ -15,12 +15,11 @@ const prisma = new PrismaClient({
 type seedEmployeeType = ReturnType<() => (typeof data)["employees"][number]>;
 
 async function main() {
-  await seedDepartments();
-  await seedEmployees();
-
-  await seedEmployeeDepartment();
+  // await seedDepartments();
+  // await seedEmployees();
+  // await seedEmployeeDepartment();
   // await seedEmployeeSalary();
-  // await seedEmployeeTitle();
+  await seedEmployeeTitle();
   // await seedEmployeeManager();
 }
 
@@ -59,11 +58,92 @@ async function seedEmployees() {
 }
 
 async function seedEmployeeDepartment() {
-  // const newDepartment;
+  const newDept: department = data.department;
+  const newEmployees = data.employees.map(({ id, hire_date }) => {
+    return {
+      id: BigInt(id),
+      hire_date: new Date(hire_date),
+    };
+  });
+
+  Promise.all(
+    newEmployees.map((data) => {
+      prisma.department_employee
+        .upsert({
+          where: {
+            employee_id_department_id: {
+              employee_id: data.id,
+              department_id: newDept.id,
+            },
+          },
+          update: {
+            employee_id: data.id,
+            department_id: newDept.id,
+            from_date: data.hire_date,
+            to_date: new Date("9999-01-01"),
+          },
+          create: {
+            employee_id: data.id,
+            department_id: newDept.id,
+            from_date: data.hire_date,
+            to_date: new Date("9999-01-01"),
+          },
+        })
+        // won't work without .then OR .catch ???
+        // idk why it works for others
+        .then((ret) => {
+          console.log(ret);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    })
+  );
 }
 
-async function seedEmployeeSalary() {}
+async function seedEmployeeSalary() {
+  const newEmployeeSalary = data.employees.map(({ id, salary, hire_date }) => {
+    return {
+      id: BigInt(id),
+      amount: salary,
+      hire_date: new Date(hire_date),
+    };
+  });
+
+  Promise.all(
+    newEmployeeSalary.map((data) => {
+      prisma.salary
+        .upsert({
+          where: {
+            employee_id_from_date: {
+              employee_id: data.id,
+              from_date: data.hire_date,
+            },
+          },
+          update: {
+            employee_id: data.id,
+            amount: data.amount,
+            from_date: data.hire_date,
+            to_date: new Date("9999-01-01"),
+          },
+          create: {
+            employee_id: data.id,
+            amount: data.amount,
+            from_date: data.hire_date,
+            to_date: new Date("9999-01-01"),
+          },
+        })
+        .then((ret) => {
+          console.log(ret);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    })
+  );
+}
 async function seedEmployeeTitle() {}
+
 async function seedEmployeeManager() {}
 
 try {
