@@ -59,12 +59,12 @@ async function seedEmployees() {
 }
 
 async function seedEmployeeDepartment() {
-  const newDept: department = data.department;
+  const newDepartment: department = data.department;
   const newEmployees: department_employee[] = data.employees.map(
     ({ id, hire_date }) => {
       return {
         employee_id: BigInt(id),
-        department_id: newDept.id,
+        department_id: newDepartment.id,
         from_date: new Date(hire_date),
         to_date: new Date("9999-01-01"),
       };
@@ -78,7 +78,7 @@ async function seedEmployeeDepartment() {
           where: {
             employee_id_department_id: {
               employee_id: data.employee_id,
-              department_id: newDept.id,
+              department_id: newDepartment.id,
             },
           },
           update: data,
@@ -169,7 +169,41 @@ async function seedEmployeeTitle() {
   );
 }
 
-async function seedEmployeeManager() {}
+async function seedEmployeeManager() {
+  const newDepartment: department = data.department;
+  const newEmployeeManager: department_manager[] = data.employees
+    .filter(({ is_manager }) => is_manager)
+    .map(({ id, hire_date }) => {
+      return {
+        employee_id: BigInt(id),
+        department_id: newDepartment.id,
+        from_date: new Date(hire_date),
+        to_date: new Date("9999-01-01"),
+      };
+    });
+
+  Promise.all(
+    newEmployeeManager.map((data) => {
+      prisma.department_manager
+        .upsert({
+          where: {
+            employee_id_department_id: {
+              employee_id: data.employee_id,
+              department_id: data.department_id,
+            },
+          },
+          update: data,
+          create: data,
+        })
+        .then((ret) => {
+          console.log(ret);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    })
+  );
+}
 
 try {
   await main();
