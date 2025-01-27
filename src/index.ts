@@ -1,8 +1,8 @@
 import express, {
-  NextFunction,
-  ErrorRequestHandler,
-  Request,
-  Response,
+  type NextFunction,
+  type ErrorRequestHandler,
+  type Request,
+  type Response,
 } from "express";
 import routes from "./routes/routes.js";
 
