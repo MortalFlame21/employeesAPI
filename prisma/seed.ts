@@ -2,7 +2,10 @@ import {
   type department,
   type employee,
   type department_employee,
-  employee_gender,
+  type salary,
+  type department_manager,
+  type title,
+  type employee_gender,
   PrismaClient,
 } from "@prisma/client";
 
@@ -12,15 +15,13 @@ const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"],
 });
 
-type seedEmployeeType = ReturnType<() => (typeof data)["employees"][number]>;
-
 async function main() {
   // await seedDepartments();
   // await seedEmployees();
   // await seedEmployeeDepartment();
   // await seedEmployeeSalary();
-  await seedEmployeeTitle();
-  // await seedEmployeeManager();
+  // await seedEmployeeTitle();
+  await seedEmployeeManager();
 }
 
 async function seedDepartments() {
@@ -59,12 +60,16 @@ async function seedEmployees() {
 
 async function seedEmployeeDepartment() {
   const newDept: department = data.department;
-  const newEmployees = data.employees.map(({ id, hire_date }) => {
-    return {
-      id: BigInt(id),
-      hire_date: new Date(hire_date),
-    };
-  });
+  const newEmployees: department_employee[] = data.employees.map(
+    ({ id, hire_date }) => {
+      return {
+        employee_id: BigInt(id),
+        department_id: newDept.id,
+        from_date: new Date(hire_date),
+        to_date: new Date("9999-01-01"),
+      };
+    }
+  );
 
   Promise.all(
     newEmployees.map((data) => {
@@ -72,22 +77,12 @@ async function seedEmployeeDepartment() {
         .upsert({
           where: {
             employee_id_department_id: {
-              employee_id: data.id,
+              employee_id: data.employee_id,
               department_id: newDept.id,
             },
           },
-          update: {
-            employee_id: data.id,
-            department_id: newDept.id,
-            from_date: data.hire_date,
-            to_date: new Date("9999-01-01"),
-          },
-          create: {
-            employee_id: data.id,
-            department_id: newDept.id,
-            from_date: data.hire_date,
-            to_date: new Date("9999-01-01"),
-          },
+          update: data,
+          create: data,
         })
         // won't work without .then OR .catch ???
         // idk why it works for others
@@ -102,13 +97,16 @@ async function seedEmployeeDepartment() {
 }
 
 async function seedEmployeeSalary() {
-  const newEmployeeSalary = data.employees.map(({ id, salary, hire_date }) => {
-    return {
-      id: BigInt(id),
-      amount: salary,
-      hire_date: new Date(hire_date),
-    };
-  });
+  const newEmployeeSalary: salary[] = data.employees.map(
+    ({ id, salary, hire_date }) => {
+      return {
+        employee_id: BigInt(id),
+        from_date: new Date(hire_date),
+        to_date: new Date("9999-01-01"),
+        amount: BigInt(salary),
+      };
+    }
+  );
 
   Promise.all(
     newEmployeeSalary.map((data) => {
@@ -116,22 +114,12 @@ async function seedEmployeeSalary() {
         .upsert({
           where: {
             employee_id_from_date: {
-              employee_id: data.id,
-              from_date: data.hire_date,
+              employee_id: data.employee_id,
+              from_date: data.from_date,
             },
           },
-          update: {
-            employee_id: data.id,
-            amount: data.amount,
-            from_date: data.hire_date,
-            to_date: new Date("9999-01-01"),
-          },
-          create: {
-            employee_id: data.id,
-            amount: data.amount,
-            from_date: data.hire_date,
-            to_date: new Date("9999-01-01"),
-          },
+          update: data,
+          create: data,
         })
         .then((ret) => {
           console.log(ret);
@@ -142,7 +130,44 @@ async function seedEmployeeSalary() {
     })
   );
 }
-async function seedEmployeeTitle() {}
+
+async function seedEmployeeTitle() {
+  const newEmployeeTitle: title[] = data.employees.map(
+    ({ id, is_manager, hire_date }) => {
+      return {
+        employee_id: BigInt(id),
+        title:
+          (is_manager ? data.titles.at(0) : data.titles.at(1)) ??
+          "Unknown gamer",
+        from_date: new Date(hire_date),
+        to_date: new Date("9999-01-01"),
+      };
+    }
+  );
+
+  Promise.all(
+    newEmployeeTitle.map((data) => {
+      prisma.title
+        .upsert({
+          where: {
+            employee_id_title_from_date: {
+              employee_id: data.employee_id,
+              title: data.title,
+              from_date: data.from_date,
+            },
+          },
+          update: data,
+          create: data,
+        })
+        .then((ret) => {
+          console.log(ret);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    })
+  );
+}
 
 async function seedEmployeeManager() {}
 
