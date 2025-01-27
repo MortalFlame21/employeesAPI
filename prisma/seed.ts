@@ -9,6 +9,13 @@ import {
   PrismaClient,
 } from "@prisma/client";
 
+/*
+  notes:
+  - idk why i need to use .then and then .catch on some, I am thinking for the ones
+    with that nested where clause.
+  - might need to do add dependency between the async functions.
+*/
+
 import data from "@/_prisma/data.json" assert { type: "json" };
 
 const prisma = new PrismaClient({
@@ -16,11 +23,12 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  // await seedDepartments();
-  // await seedEmployees();
-  // await seedEmployeeDepartment();
-  // await seedEmployeeSalary();
-  // await seedEmployeeTitle();
+  await seedDepartments();
+  await seedEmployees();
+
+  await seedEmployeeDepartment();
+  await seedEmployeeSalary();
+  await seedEmployeeTitle();
   await seedEmployeeManager();
 }
 
