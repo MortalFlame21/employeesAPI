@@ -1,7 +1,6 @@
 import express from "express";
 import {
   PrismaClient,
-  type department,
   type department_employee,
   type salary,
 } from "@prisma/client";
@@ -9,6 +8,13 @@ import { jsonParseBigInt } from "../utils/jsonUtils.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+/*
+  todo:
+  - add delete for:
+    title, salary, department
+  - change body req params use snake_case
+*/
 
 // get all employees
 router.get("/", async (req, res) => {
