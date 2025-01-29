@@ -170,6 +170,21 @@ router.put("/title", async (req, res) => {
   });
 });
 
+router.post("title", async (req, res) => {
+  const { employeeID, title, fromDate, toDate } = req.body;
+
+  const newTitle = await prisma.title.create({
+    data: {
+      employee_id: parseInt(employeeID),
+      title: title,
+      from_date: new Date(fromDate),
+      to_date: new Date(toDate),
+    },
+  });
+
+  res.json({ new_employee_title: newTitle });
+});
+
 // update employee department
 router.put("/department", async (req, res) => {
   const { employeeID, departmentID, fromDate, toDate } = req.body;
