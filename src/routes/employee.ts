@@ -1,5 +1,5 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type salary } from "@prisma/client";
 import { jsonParseBigInt } from "../utils/jsonUtils.js";
 
 const router = express.Router();
@@ -45,25 +45,89 @@ router.post("/", async (req, res) => {
   res.json({ new_employee: newEmployee });
 });
 
-// update employee salary
+// update employee salary, typically this route will update the to_date.
+// POST will update the amount
 router.put("/salary", async (req, res) => {
-  const { employeeID, amount, fromDate, toDate } = req.body;
+  const { employeeID, fromDate, toDate } = req.body;
 
-  // check if existing
-  // edit current row (to be old) and edit to_date to fromDate
+  const data = {
+    employee_id: BigInt(employeeID),
+    from_date: new Date(fromDate),
+    to_date: new Date(toDate),
+  };
 
-  const newSalary = await prisma.salary.create({
-    data: {
-      employee_id: parseInt(employeeID),
-      amount: parseInt(amount),
-      from_date: new Date(fromDate),
-      to_date: new Date(toDate),
+  const oldSalary = await prisma.salary.findFirst({
+    where: {
+      employee_id: data.employee_id,
+      from_date: data.from_date,
     },
   });
+  const parsedOldSalary = jsonParseBigInt(oldSalary);
+
+  const newSalary = await prisma.salary.update({
+    where: {
+      employee_id_from_date: {
+        employee_id: data.employee_id,
+        from_date: data.from_date,
+      },
+    },
+    data: data,
+  });
+  const parsedNewSalary = jsonParseBigInt(newSalary);
 
   res.json({
-    old_salary: "oldSalary",
-    new_salary: newSalary,
+    old_salary: parsedOldSalary,
+    new_salary: parsedNewSalary,
+  });
+});
+
+// create new salary, this route will update the amount
+// and update the old to_date
+router.post("/salary", async (req, res) => {
+  const { employeeID, amount, fromDate, toDate } = req.body;
+
+  const data: salary = {
+    employee_id: BigInt(employeeID),
+    amount: BigInt(amount),
+    from_date: new Date(fromDate),
+    to_date: new Date(toDate),
+  };
+
+  const oldSalary = await prisma.salary.findFirst({
+    where: { employee_id: data.employee_id },
+    orderBy: { from_date: "asc" },
+  });
+  const parsedOldSalary = jsonParseBigInt(oldSalary);
+
+  if (oldSalary) {
+    await prisma.salary.update({
+      where: {
+        employee_id_from_date: {
+          employee_id: data.employee_id,
+          from_date: oldSalary.from_date,
+        },
+      },
+      data: {
+        to_date: data.from_date,
+      },
+    });
+  }
+
+  const newSalary = await prisma.salary.upsert({
+    where: {
+      employee_id_from_date: {
+        employee_id: data.employee_id,
+        from_date: data.from_date,
+      },
+    },
+    update: data,
+    create: data,
+  });
+  const parsedNewSalary = jsonParseBigInt(newSalary);
+
+  res.json({
+    old_salary: parsedOldSalary,
+    new_salary: parsedNewSalary,
   });
 });
 
