@@ -61,27 +61,26 @@ router.put("/salary", async (req, res) => {
   };
 
   const oldSalary = await prisma.salary.findFirst({
-    where: {
-      employee_id: data.employee_id,
-      from_date: data.from_date,
-    },
+    where: { employee_id: data.employee_id },
+    orderBy: { from_date: "desc" },
   });
 
   if (!oldSalary)
-    throw `employee_id: ${data.employee_id} does
-    not exist in Salary table. Nothing to update.`;
+    throw `employee_id: ${data.employee_id}\n
+    from_date: ${data.from_date}\n
+    does not exist in Salary table. Nothing to update.`;
 
   await prisma.salary.update({
     where: {
       employee_id_from_date: {
         employee_id: data.employee_id,
-        from_date: data.from_date,
+        from_date: oldSalary.from_date,
       },
     },
-    data: { from_date: data.to_date },
+    data: { to_date: data.from_date },
   });
 
-  const newSalary = prisma.salary.create({ data: data });
+  const newSalary = await prisma.salary.create({ data: data });
 
   res.json({
     old_salary: jsonParseBigInt(oldSalary),
