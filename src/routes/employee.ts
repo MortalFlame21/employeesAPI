@@ -135,20 +135,37 @@ router.post("/salary", async (req, res) => {
 router.put("/title", async (req, res) => {
   const { employeeID, title, fromDate, toDate } = req.body;
 
-  // check if existing
-  // edit current row (to be old) and edit to_date to fromDate
+  const data = {
+    employee_id: parseInt(employeeID),
+    title: title,
+    from_date: new Date(fromDate),
+    to_date: new Date(toDate),
+  };
 
-  const newTitle = await prisma.title.create({
-    data: {
-      employee_id: parseInt(employeeID),
-      title: title,
-      from_date: new Date(fromDate),
-      to_date: new Date(toDate),
-    },
+  const oldTitle = await prisma.title.findFirst({
+    where: { employee_id: data.employee_id },
+    orderBy: { from_date: "desc" },
   });
 
+  if (!oldTitle)
+    throw `employee_id: ${data.employee_id} does
+    not exist in Title table. Nothing to update.`;
+
+  await prisma.title.update({
+    where: {
+      employee_id_title_from_date: {
+        title: oldTitle.title,
+        employee_id: data.employee_id,
+        from_date: oldTitle.from_date,
+      },
+    },
+    data: data,
+  });
+
+  const newTitle = await prisma.title.create({ data: data });
+
   res.json({
-    old_title: "oldTitle",
+    old_title: oldTitle,
     new_title: newTitle,
   });
 });
