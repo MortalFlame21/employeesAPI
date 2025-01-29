@@ -60,8 +60,12 @@ router.put("/", async (req, res) => {
 
 // delete a department
 // do later: consequently updating all employees in that department
-router.delete("/:department", (req, res) => {
-  res.send("delete a department");
+router.delete("/:department_id", async (req, res) => {
+  const department_id = req.params.department_id;
+  const deletedDepartment = await prisma.department.delete({
+    where: { id: department_id },
+  });
+  res.send({ deleted_department: deletedDepartment });
 });
 
 export default router;
