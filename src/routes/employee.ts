@@ -1,5 +1,10 @@
 import express from "express";
-import { PrismaClient, type salary } from "@prisma/client";
+import {
+  PrismaClient,
+  type department,
+  type department_employee,
+  type salary,
+} from "@prisma/client";
 import { jsonParseBigInt } from "../utils/jsonUtils.js";
 
 const router = express.Router();
@@ -162,22 +167,53 @@ router.post("/title", async (req, res) => {
 router.put("/department", async (req, res) => {
   const { employeeID, departmentID, fromDate, toDate } = req.body;
 
-  // check if existing
-  // edit current row (to be old) and edit to_date to fromDate
+  const data: department_employee = {
+    employee_id: BigInt(employeeID),
+    department_id: departmentID,
+    from_date: new Date(fromDate),
+    to_date: new Date(toDate),
+  };
 
-  const newEmployeeDepartment = await prisma.department_employee.create({
+  const oldDepartment = await prisma.department_employee.findFirst({
+    where: { employee_id: data.employee_id },
+    orderBy: { from_date: "desc" },
+  });
+
+  if (!oldDepartment)
+    throw `employee_id: ${data.employee_id} does not exist
+    in Department table. Nothing to update.`;
+
+  await prisma.department_employee.update({
+    where: {
+      employee_id_department_id: {
+        employee_id: data.employee_id,
+        department_id: oldDepartment.department_id,
+      },
+    },
+    data: { to_date: data.from_date },
+  });
+
+  const newDepartment = await prisma.department_employee.create({ data: data });
+
+  res.json({
+    old_department: jsonParseBigInt(oldDepartment),
+    new_department: jsonParseBigInt(newDepartment),
+  });
+});
+
+router.post("/department", async (req, res) => {
+  const { employeeID, departmentID, fromDate, toDate } = req.body;
+
+  const newDepartment = await prisma.department_employee.create({
     data: {
-      employee_id: parseInt(employeeID),
+      employee_id: BigInt(employeeID),
       department_id: departmentID,
       from_date: new Date(fromDate),
       to_date: new Date(toDate),
     },
   });
 
-  res.json({
-    old_department: "oldDepartment",
-    new_department: newEmployeeDepartment,
-  });
+  res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
 });
 
 // get employee by id
