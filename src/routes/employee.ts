@@ -66,7 +66,6 @@ router.put("/salary", async (req, res) => {
       from_date: data.from_date,
     },
   });
-  const parsedOldSalary = jsonParseBigInt(oldSalary);
 
   if (!oldSalary)
     throw `employee_id: ${data.employee_id} does
@@ -83,11 +82,10 @@ router.put("/salary", async (req, res) => {
   });
 
   const newSalary = prisma.salary.create({ data: data });
-  const parsedNewSalary = jsonParseBigInt(newSalary);
 
   res.json({
-    old_salary: parsedOldSalary,
-    new_salary: parsedNewSalary,
+    old_salary: jsonParseBigInt(oldSalary),
+    new_salary: jsonParseBigInt(newSalary),
   });
 });
 
@@ -104,7 +102,7 @@ router.post("/salary", async (req, res) => {
     },
   });
 
-  res.json({ new_employee_salary: newEmployeeSalary });
+  res.json({ new_employee_salary: jsonParseBigInt(newEmployeeSalary) });
 });
 
 // changes title, if employee_id exists in the table
@@ -142,8 +140,8 @@ router.put("/title", async (req, res) => {
   const newTitle = await prisma.title.create({ data: data });
 
   res.json({
-    old_title: oldTitle,
-    new_title: newTitle,
+    old_title: jsonParseBigInt(oldTitle),
+    new_title: jsonParseBigInt(newTitle),
   });
 });
 
@@ -159,7 +157,7 @@ router.post("/title", async (req, res) => {
     },
   });
 
-  res.json({ new_employee_title: newTitle });
+  res.json({ new_employee_title: jsonParseBigInt(newTitle) });
 });
 
 // update employee department
