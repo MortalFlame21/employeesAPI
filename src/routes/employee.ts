@@ -45,13 +45,17 @@ router.post("/", async (req, res) => {
   res.json({ new_employee: newEmployee });
 });
 
-// update employee salary, typically this route will update the to_date.
-// POST will update the amount
-router.put("/salary", async (req, res) => {
-  const { employeeID, fromDate, toDate } = req.body;
+// changes salary, if employee_id exists in the table
+// it then updates old_to_date to new_from_date
 
-  const data = {
+// would like to redirect to POST instead???
+
+router.put("/salary", async (req, res) => {
+  const { employeeID, amount, fromDate, toDate } = req.body;
+
+  const data: salary = {
     employee_id: BigInt(employeeID),
+    amount: BigInt(amount),
     from_date: new Date(fromDate),
     to_date: new Date(toDate),
   };
@@ -64,15 +68,21 @@ router.put("/salary", async (req, res) => {
   });
   const parsedOldSalary = jsonParseBigInt(oldSalary);
 
-  const newSalary = await prisma.salary.update({
+  if (!oldSalary)
+    throw `employee_id: ${data.employee_id} does
+    not exist in Salary table. Nothing to update.`;
+
+  await prisma.salary.update({
     where: {
       employee_id_from_date: {
         employee_id: data.employee_id,
         from_date: data.from_date,
       },
     },
-    data: data,
+    data: { from_date: data.to_date },
   });
+
+  const newSalary = prisma.salary.create({ data: data });
   const parsedNewSalary = jsonParseBigInt(newSalary);
 
   res.json({
@@ -81,57 +91,24 @@ router.put("/salary", async (req, res) => {
   });
 });
 
-// create new salary, this route will update the amount
-// and update the old to_date
+// adds salary to employee
 router.post("/salary", async (req, res) => {
   const { employeeID, amount, fromDate, toDate } = req.body;
 
-  const data: salary = {
-    employee_id: BigInt(employeeID),
-    amount: BigInt(amount),
-    from_date: new Date(fromDate),
-    to_date: new Date(toDate),
-  };
-
-  const oldSalary = await prisma.salary.findFirst({
-    where: { employee_id: data.employee_id },
-    orderBy: { from_date: "asc" },
-  });
-  const parsedOldSalary = jsonParseBigInt(oldSalary);
-
-  if (oldSalary) {
-    await prisma.salary.update({
-      where: {
-        employee_id_from_date: {
-          employee_id: data.employee_id,
-          from_date: oldSalary.from_date,
-        },
-      },
-      data: {
-        to_date: data.from_date,
-      },
-    });
-  }
-
-  const newSalary = await prisma.salary.upsert({
-    where: {
-      employee_id_from_date: {
-        employee_id: data.employee_id,
-        from_date: data.from_date,
-      },
+  const newEmployeeSalary = await prisma.salary.create({
+    data: {
+      employee_id: BigInt(employeeID),
+      amount: BigInt(amount),
+      from_date: new Date(fromDate),
+      to_date: new Date(toDate),
     },
-    update: data,
-    create: data,
   });
-  const parsedNewSalary = jsonParseBigInt(newSalary);
 
-  res.json({
-    old_salary: parsedOldSalary,
-    new_salary: parsedNewSalary,
-  });
+  res.json({ new_employee_salary: newEmployeeSalary });
 });
 
-// update employee title
+// changes title, if employee_id exists in the table
+// it then updates old_to_date to new_from_date
 router.put("/title", async (req, res) => {
   const { employeeID, title, fromDate, toDate } = req.body;
 
