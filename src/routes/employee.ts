@@ -18,13 +18,12 @@ router.get("/", async (req, res) => {
     skip: offset,
     take: limit,
   });
-  const parsedEmployees = jsonParseBigInt(employees);
 
   res.json({
     offset: offset,
     limit: limit,
     nextPage: nextPage,
-    results: parsedEmployees,
+    results: jsonParseBigInt(employees),
   });
 });
 
@@ -133,7 +132,7 @@ router.put("/title", async (req, res) => {
         from_date: oldTitle.from_date,
       },
     },
-    data: data,
+    data: { to_date: data.from_date },
   });
 
   const newTitle = await prisma.title.create({ data: data });
@@ -186,8 +185,7 @@ router.get("/:id", async (req, res) => {
   const employee = await prisma.employee.findFirst({
     where: { id: parseInt(req.params.id) },
   });
-  const parsedEmployee = jsonParseBigInt(employee);
-  res.json(parsedEmployee);
+  res.json(jsonParseBigInt(employee));
 });
 
 // delete employee
@@ -197,10 +195,7 @@ router.delete("/", async (req, res) => {
       id: parseInt(req.body.id),
     },
   });
-  const parsedEmployee = jsonParseBigInt(employee);
-  res.json({
-    deletedUser: parsedEmployee,
-  });
+  res.json({ deletedUser: jsonParseBigInt(employee) });
 });
 
 // get employee by first name
@@ -213,8 +208,7 @@ router.get("/firstName/:name", async (req, res) => {
       },
     },
   });
-  const parsedEmployee = jsonParseBigInt(employee);
-  res.json(parsedEmployee);
+  res.json(jsonParseBigInt(employee));
 });
 
 // get salary of employee by id
@@ -222,8 +216,7 @@ router.get("/salary/:id", async (req, res) => {
   const employeeSalary = await prisma.salary.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
-  const parsedSalary = jsonParseBigInt(employeeSalary);
-  res.json(parsedSalary);
+  res.json(jsonParseBigInt(employeeSalary));
 });
 
 // get title of employee by id
@@ -231,8 +224,7 @@ router.get("/title/:id", async (req, res) => {
   const employeeTitle = await prisma.title.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
-  const parsedTitle = jsonParseBigInt(employeeTitle);
-  res.json(parsedTitle);
+  res.json(jsonParseBigInt(employeeTitle));
 });
 
 export default router;
