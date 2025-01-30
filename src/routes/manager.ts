@@ -1,7 +1,6 @@
 import express from "express";
 import { PrismaClient, type department_manager } from "@prisma/client";
 import { jsonParseBigInt } from "@/utils/jsonUtils.js";
-import { request } from "http";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -15,7 +14,8 @@ router.get("/", async (req, res) => {
   res.send(jsonParseBigInt(managers));
 });
 
-// create manager
+// only for existing employee_managers
+// if existing edit old and make new
 router.put("/", async (req, res) => {
   const { employee_id, department_id, from_date, to_date } = req.body;
 
@@ -54,6 +54,7 @@ router.put("/", async (req, res) => {
   });
 });
 
+// for newly added managers, creating a new row
 router.post("/", async (req, res) => {
   const { employee_id, department_id, from_date, to_date } = req.body;
 
