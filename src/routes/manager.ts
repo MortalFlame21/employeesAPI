@@ -33,7 +33,7 @@ router.put("/", async (req, res) => {
 
   if (!oldManager)
     throw `employee_id: ${data.employee_id}
-    does not exist in Department table. Nothing to update.`;
+    does not exist in Manager table. Nothing to update.`;
 
   await prisma.department_manager.update({
     where: {
@@ -70,8 +70,26 @@ router.post("/", async (req, res) => {
 });
 
 // delete manager
-router.delete("/:id", (req, res) => {
-  res.send("delete manager");
+router.delete("/:employee_id", async (req, res) => {
+  const { employee_id } = req.params;
+
+  const deletedManager = await prisma.department_manager.findFirst({
+    where: { employee_id: BigInt(employee_id) },
+    orderBy: { from_date: "desc" },
+  });
+
+  if (!deletedManager)
+    throw `employee_id: ${BigInt(employee_id)} does not exist in Manager table`;
+
+  const deletedManager_ = await prisma.department_manager.delete({
+    where: {
+      employee_id_department_id: {
+        employee_id: BigInt(employee_id),
+        department_id: deletedManager.department_id,
+      },
+    },
+  });
+  res.json({ deleted_manager: jsonParseBigInt(deletedManager_) });
 });
 
 export default router;
