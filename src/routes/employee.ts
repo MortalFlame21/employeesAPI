@@ -262,7 +262,7 @@ router.get("/salary/:id", async (req, res) => {
 });
 
 // get title of employee by id
-router.get("/title/:id", async (req, res) => {
+router.get(":id/title/", async (req, res) => {
   const employeeTitle = await prisma.title.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
