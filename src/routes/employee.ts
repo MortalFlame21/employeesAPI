@@ -254,7 +254,7 @@ router.get("/firstName/:name", async (req, res) => {
 });
 
 // get salary of employee by id
-router.get("/salary/:id", async (req, res) => {
+router.get("/:id/salary", async (req, res) => {
   const employeeSalary = await prisma.salary.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
@@ -268,5 +268,11 @@ router.get(":id/title/", async (req, res) => {
   });
   res.json(jsonParseBigInt(employeeTitle));
 });
+
+// get employees by title
+
+// get employees by salary range
+
+// get employees by hire_date range
 
 export default router;
