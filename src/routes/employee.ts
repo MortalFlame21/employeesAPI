@@ -262,7 +262,7 @@ router.get("/:id/salary", async (req, res) => {
 });
 
 // get title of employee by id
-router.get(":id/title/", async (req, res) => {
+router.get("/:id/title", async (req, res) => {
   const employeeTitle = await prisma.title.findFirst({
     where: { employee_id: parseInt(req.params.id) },
   });
@@ -270,6 +270,28 @@ router.get(":id/title/", async (req, res) => {
 });
 
 // get employees by title
+router.get("/title/:title", async (req, res) => {
+  const employees = await prisma.title.findMany({
+    where: {
+      title: {
+        equals: req.params.title,
+        mode: "insensitive",
+      },
+    },
+    take: 10,
+    skip: 1,
+  });
+  const employees_ = await prisma.employee.findMany({
+    where: {
+      id: {
+        in: employees.map(({ employee_id }) => {
+          return employee_id;
+        }),
+      },
+    },
+  });
+  res.send({ employees: jsonParseBigInt(employees_) });
+});
 
 // get employees by salary range
 
