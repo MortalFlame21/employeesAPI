@@ -14,11 +14,24 @@ const prisma = new PrismaClient();
     title, salary, department
 */
 
-// get all employees
-router.get("/", EmployeeController.getEmployees);
-
 // create employee
 router.post("/", EmployeeController.createEmployee);
+// delete employee
+router.delete("/", EmployeeController.deleteEmployee);
+
+// get employee by first name
+router.get("/firstName/:name", EmployeeController.findByFirstName);
+
+// for below I would like to combine, the following 3 into a query
+// for the GET request
+// get all employees
+router.get("/", EmployeeController.getEmployees);
+// get employees by title
+router.get("/title/:title", EmployeeController.findByTitle);
+// get employees by salary range
+router.get("/salary", EmployeeController.findBySalary);
+// get employees by hire_date range
+router.get("/hired", EmployeeController.findByHireDate);
 
 // /salary, /title, /department do the same
 // changes salary, if employee_id exists in the table
@@ -33,24 +46,6 @@ router.post("/title", EmployeeController.insertTitle);
 
 router.put("/department", EmployeeController.upsertDepartment);
 router.post("/department", EmployeeController.insertDepartment);
-
-// delete employee
-router.delete("/", EmployeeController.deleteEmployee);
-
-// get employee by first name
-router.get("/firstName/:name", EmployeeController.findByFirstName);
-
-// for below I would like to combine, the following 3 into a query
-// for the GET request
-
-// get employees by title
-router.get("/title/:title", EmployeeController.findByTitle);
-
-// get employees by salary range
-router.get("/salary", EmployeeController.findBySalary);
-
-// get employees by hire_date range
-router.get("/hired", EmployeeController.findByHireDate);
 
 // would like the following 3 to conjoin into 1 route
 // get employee by id
