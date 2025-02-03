@@ -1,10 +1,7 @@
 import express from "express";
-import { PrismaClient, type department_manager } from "@prisma/client";
-import { jsonParseBigInt } from "@/utils/jsonUtils.js";
 import ManagerController from "@/controller/manager.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // get managers
 router.get("/", ManagerController.getManagers);
