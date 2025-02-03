@@ -15,45 +15,13 @@ const prisma = new PrismaClient();
     title, salary, department
 */
 
+import EmployeeController from "@/controller/employee.js";
+
 // get all employees
-router.get("/", async (req, res) => {
-  let offset = parseInt(req.query.offset as string) || 1;
-  let limit = parseInt(req.query.limit as string) || 10;
-  if (limit > 100) limit = 100;
-
-  const end = offset * limit;
-  const nextPage = `${req.baseUrl}/?offset=${end}&limit=${limit}`;
-
-  const employees = await prisma.employee.findMany({
-    skip: offset,
-    take: limit,
-  });
-
-  res.json({
-    offset: offset,
-    limit: limit,
-    nextPage: nextPage,
-    results: jsonParseBigInt(employees),
-  });
-});
+router.get("/", EmployeeController.getEmployees);
 
 // create employee
-router.post("/", async (req, res) => {
-  const { id, birth_date, first_name, last_name, gender, hire_date } = req.body;
-
-  const newEmployee = await prisma.employee.create({
-    data: {
-      id: BigInt(id),
-      birth_date: new Date(birth_date),
-      first_name: first_name,
-      last_name: last_name,
-      gender: gender,
-      hire_date: new Date(hire_date),
-    },
-  });
-
-  res.json({ new_employee: jsonParseBigInt(newEmployee) });
-});
+router.post("/", EmployeeController.createEmployee);
 
 // changes salary, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
