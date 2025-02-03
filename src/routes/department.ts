@@ -1,17 +1,12 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { jsonParseBigInt } from "@/utils/jsonUtils.js";
+import DepartmentController from "@/controller/department.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", async (req, res) => {
-  const departments = await prisma.department.findMany({
-    take: 10,
-    skip: 0,
-  });
-  res.send(departments);
-});
+router.get("/", DepartmentController.getDepartments);
 
 // get employee by department
 // probs put in employees
@@ -39,33 +34,10 @@ router.get("/:department_id", async (req, res) => {
 });
 
 // add department
-router.put("/", async (req, res) => {
-  const { department_name } = req.body;
-
-  const latestDepartment = await prisma.department.findFirst({
-    orderBy: { id: "desc" },
-  });
-
-  const idNum = parseInt(latestDepartment!.id.replace("d", "")) + 1;
-
-  const newDepartment = await prisma.department.create({
-    data: {
-      id: `d${String(idNum).padStart(3, "0")}`,
-      dept_name: department_name,
-    },
-  });
-
-  res.send({ new_department: newDepartment });
-});
+router.put("/", DepartmentController.createDepartment);
 
 // delete a department
 // do later: consequently updating all employees in that department
-router.delete("/:department_id", async (req, res) => {
-  const department_id = req.params.department_id;
-  const deletedDepartment = await prisma.department.delete({
-    where: { id: department_id },
-  });
-  res.send({ deleted_department: deletedDepartment });
-});
+router.delete("/:department_id", DepartmentController.deleteDepartment);
 
 export default router;
