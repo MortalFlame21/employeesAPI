@@ -13,7 +13,6 @@ const prisma = new PrismaClient();
   todo:
   - add delete for:
     title, salary, department
-  - change body req params use snake_case
 */
 
 // get all employees
