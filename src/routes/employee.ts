@@ -269,6 +269,9 @@ router.get("/:id/title", async (req, res) => {
   res.json(jsonParseBigInt(employeeTitle));
 });
 
+// for below I would like to combine, the following 3 into a query
+// for the GET request
+
 // get employees by title
 router.get("/title/:title", async (req, res) => {
   const employees = await prisma.title.findMany({
@@ -294,7 +297,46 @@ router.get("/title/:title", async (req, res) => {
 });
 
 // get employees by salary range
+router.get("/salary", async (req, res) => {
+  const min_salary = BigInt(req.query.min_salary as string) || 1n;
+  const max_salary = BigInt(req.query.max_salary as string) || 999999n;
+  const employees = await prisma.salary.findMany({
+    where: {
+      amount: {
+        gte: min_salary,
+        lte: max_salary,
+      },
+    },
+    take: 10,
+    skip: 1,
+  });
+  const employees_ = await prisma.employee.findMany({
+    where: {
+      id: {
+        in: employees.map(({ employee_id }) => {
+          return employee_id;
+        }),
+      },
+    },
+  });
+  res.send({ employees: jsonParseBigInt(employees_) });
+});
 
 // get employees by hire_date range
+router.get("/hired", async (req, res) => {
+  const start_hire_date = new Date(req.query.start_hire_date as string);
+  const end_hire_date = new Date(req.query.end_hire_date as string);
+  const employees = await prisma.employee.findMany({
+    where: {
+      hire_date: {
+        gte: start_hire_date,
+        lte: end_hire_date,
+      },
+    },
+    take: 10,
+    skip: 1,
+  });
+  res.send({ employees: jsonParseBigInt(employees) });
+});
 
 export default router;
