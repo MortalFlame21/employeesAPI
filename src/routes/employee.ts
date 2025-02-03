@@ -222,14 +222,6 @@ router.post("/department", async (req, res) => {
   res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
 });
 
-// get employee by id
-router.get("/:id", async (req, res) => {
-  const employee = await prisma.employee.findFirst({
-    where: { id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employee));
-});
-
 // delete employee
 router.delete("/", async (req, res) => {
   const employee = await prisma.employee.delete({
@@ -251,22 +243,6 @@ router.get("/firstName/:name", async (req, res) => {
     },
   });
   res.json(jsonParseBigInt(employee));
-});
-
-// get salary of employee by id
-router.get("/:id/salary", async (req, res) => {
-  const employeeSalary = await prisma.salary.findFirst({
-    where: { employee_id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employeeSalary));
-});
-
-// get title of employee by id
-router.get("/:id/title", async (req, res) => {
-  const employeeTitle = await prisma.title.findFirst({
-    where: { employee_id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employeeTitle));
 });
 
 // for below I would like to combine, the following 3 into a query
@@ -298,8 +274,8 @@ router.get("/title/:title", async (req, res) => {
 
 // get employees by salary range
 router.get("/salary", async (req, res) => {
-  const min_salary = BigInt(req.query.min_salary as string) || 1n;
-  const max_salary = BigInt(req.query.max_salary as string) || 999999n;
+  const min_salary = BigInt((req.query.min_salary as string) || 1);
+  const max_salary = BigInt((req.query.max_salary as string) || 999999);
   const employees = await prisma.salary.findMany({
     where: {
       amount: {
@@ -308,7 +284,8 @@ router.get("/salary", async (req, res) => {
       },
     },
     take: 10,
-    skip: 1,
+    skip: 0,
+    distinct: ["employee_id"],
   });
   const employees_ = await prisma.employee.findMany({
     where: {
@@ -334,9 +311,33 @@ router.get("/hired", async (req, res) => {
       },
     },
     take: 10,
-    skip: 1,
+    skip: 0,
+    distinct: ["id"],
   });
   res.send({ employees: jsonParseBigInt(employees) });
 });
 
+// get employee by id
+router.get("/:id", async (req, res) => {
+  const employee = await prisma.employee.findFirst({
+    where: { id: parseInt(req.params.id) },
+  });
+  res.json(jsonParseBigInt(employee));
+});
+
+// get salary of employee by id
+router.get("/:id/salary", async (req, res) => {
+  const employeeSalary = await prisma.salary.findFirst({
+    where: { employee_id: parseInt(req.params.id) },
+  });
+  res.json(jsonParseBigInt(employeeSalary));
+});
+
+// get title of employee by id
+router.get("/:id/title", async (req, res) => {
+  const employeeTitle = await prisma.title.findFirst({
+    where: { employee_id: parseInt(req.params.id) },
+  });
+  res.json(jsonParseBigInt(employeeTitle));
+});
 export default router;
