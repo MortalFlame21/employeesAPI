@@ -40,19 +40,20 @@ router.get("/", async (req, res) => {
 
 // create employee
 router.post("/", async (req, res) => {
-  const { birthDate, firstName, lastName, gender, hireDate } = req.body;
+  const { id, birth_date, first_name, last_name, gender, hire_date } = req.body;
 
   const newEmployee = await prisma.employee.create({
     data: {
-      birth_date: new Date(birthDate),
-      first_name: firstName,
-      last_name: lastName,
+      id: BigInt(id),
+      birth_date: new Date(birth_date),
+      first_name: first_name,
+      last_name: last_name,
       gender: gender,
-      hire_date: new Date(hireDate),
+      hire_date: new Date(hire_date),
     },
   });
 
-  res.json({ new_employee: newEmployee });
+  res.json({ new_employee: jsonParseBigInt(newEmployee) });
 });
 
 // changes salary, if employee_id exists in the table
