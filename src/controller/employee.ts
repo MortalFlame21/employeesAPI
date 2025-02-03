@@ -29,6 +29,7 @@ const EmployeeController = {
       results: jsonParseBigInt(employees),
     });
   },
+
   createEmployee: async (req: Request, res: Response) => {
     const { id, birth_date, first_name, last_name, gender, hire_date } =
       req.body;
@@ -45,6 +46,59 @@ const EmployeeController = {
     });
 
     res.json({ new_employee: jsonParseBigInt(newEmployee) });
+  },
+
+  upsertSalary: async (req: Request, res: Response) => {
+    const { employee_id, amount, from_date, to_date } = req.body;
+
+    const data: salary = {
+      employee_id: BigInt(employee_id),
+      amount: BigInt(amount),
+      from_date: new Date(from_date),
+      to_date: new Date(to_date),
+    };
+
+    const oldSalary = await prisma.salary.findFirst({
+      where: { employee_id: data.employee_id },
+      orderBy: { from_date: "desc" },
+    });
+
+    if (!oldSalary)
+      throw `employee_id: ${data.employee_id}\n
+      from_date: ${data.from_date}\n
+      does not exist in Salary table. Nothing to update.`;
+
+    await prisma.salary.update({
+      where: {
+        employee_id_from_date: {
+          employee_id: data.employee_id,
+          from_date: oldSalary.from_date,
+        },
+      },
+      data: { to_date: data.from_date },
+    });
+
+    const newSalary = await prisma.salary.create({ data: data });
+
+    res.json({
+      old_salary: jsonParseBigInt(oldSalary),
+      new_salary: jsonParseBigInt(newSalary),
+    });
+  },
+
+  insertSalary: async (req: Request, res: Response) => {
+    const { employee_id, amount, from_date, to_date } = req.body;
+
+    const newEmployeeSalary = await prisma.salary.create({
+      data: {
+        employee_id: BigInt(employee_id),
+        amount: BigInt(amount),
+        from_date: new Date(from_date),
+        to_date: new Date(to_date),
+      },
+    });
+
+    res.json({ new_employee_salary: jsonParseBigInt(newEmployeeSalary) });
   },
 };
 
