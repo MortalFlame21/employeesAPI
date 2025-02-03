@@ -172,13 +172,13 @@ router.post("/title", async (req, res) => {
 
 // update employee department
 router.put("/department", async (req, res) => {
-  const { employeeID, departmentID, fromDate, toDate } = req.body;
+  const { employee_id, department_id, from_date, to_date } = req.body;
 
   const data: department_employee = {
-    employee_id: BigInt(employeeID),
-    department_id: departmentID,
-    from_date: new Date(fromDate),
-    to_date: new Date(toDate),
+    employee_id: BigInt(employee_id),
+    department_id: department_id,
+    from_date: new Date(from_date),
+    to_date: new Date(to_date),
   };
 
   const oldDepartment = await prisma.department_employee.findFirst({
@@ -209,14 +209,14 @@ router.put("/department", async (req, res) => {
 });
 
 router.post("/department", async (req, res) => {
-  const { employeeID, departmentID, fromDate, toDate } = req.body;
+  const { employee_id, department_id, from_date, to_date } = req.body;
 
   const newDepartment = await prisma.department_employee.create({
     data: {
-      employee_id: BigInt(employeeID),
-      department_id: departmentID,
-      from_date: new Date(fromDate),
-      to_date: new Date(toDate),
+      employee_id: BigInt(employee_id),
+      department_id: department_id,
+      from_date: new Date(from_date),
+      to_date: new Date(to_date),
     },
   });
 
