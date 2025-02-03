@@ -62,13 +62,13 @@ router.post("/", async (req, res) => {
 // would like to redirect to POST instead???
 
 router.put("/salary", async (req, res) => {
-  const { employeeID, amount, fromDate, toDate } = req.body;
+  const { employee_id, amount, from_date, to_date } = req.body;
 
   const data: salary = {
-    employee_id: BigInt(employeeID),
+    employee_id: BigInt(employee_id),
     amount: BigInt(amount),
-    from_date: new Date(fromDate),
-    to_date: new Date(toDate),
+    from_date: new Date(from_date),
+    to_date: new Date(to_date),
   };
 
   const oldSalary = await prisma.salary.findFirst({
@@ -101,14 +101,14 @@ router.put("/salary", async (req, res) => {
 
 // adds salary to employee
 router.post("/salary", async (req, res) => {
-  const { employeeID, amount, fromDate, toDate } = req.body;
+  const { employee_id, amount, from_date, to_date } = req.body;
 
   const newEmployeeSalary = await prisma.salary.create({
     data: {
-      employee_id: BigInt(employeeID),
+      employee_id: BigInt(employee_id),
       amount: BigInt(amount),
-      from_date: new Date(fromDate),
-      to_date: new Date(toDate),
+      from_date: new Date(from_date),
+      to_date: new Date(to_date),
     },
   });
 
