@@ -28,6 +28,9 @@ router.get("/title/:title", EmployeeController.findByTitle);
 router.get("/salary", EmployeeController.findBySalary);
 // get employees by hire_date range
 router.get("/hired", EmployeeController.findByHireDate);
+// get employees by department
+// remember id can only be char(4)
+router.get("/department", EmployeeController.findByDepartment);
 
 // /salary, /title, /department do the same
 // changes salary, if employee_id exists in the table

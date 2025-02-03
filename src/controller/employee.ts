@@ -156,6 +156,27 @@ const EmployeeController = {
     res.send({ employees: jsonParseBigInt(employees) });
   },
 
+  findByDepartment: async (req: Request, res: Response) => {
+    // if i want to use "joins"
+    // https://www.prisma.io/blog/prisma-orm-now-lets-you-choose-the-best-join-strategy-preview
+    const department_id = (req.query.department_id as string) ?? "";
+    const employees = await prisma.department_employee.findMany({
+      where: { department_id: department_id },
+      take: 10,
+      skip: 0,
+    });
+    const employees_ = await prisma.employee.findMany({
+      where: {
+        id: {
+          in: employees.map(({ employee_id }) => {
+            return employee_id;
+          }),
+        },
+      },
+    });
+    res.json({ employees: jsonParseBigInt(employees_) });
+  },
+
   upsertSalary: async (req: Request, res: Response) => {
     const { employee_id, amount, from_date, to_date } = req.body;
 
