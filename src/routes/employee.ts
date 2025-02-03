@@ -25,82 +25,21 @@ router.post("/", EmployeeController.createEmployee);
 
 // changes salary, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
-
 // would like to redirect to POST instead???
-
 router.put("/salary", EmployeeController.upsertSalary);
-
 // adds salary to employee
 router.post("/salary", EmployeeController.insertSalary);
 
 // changes title, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
 router.put("/title", EmployeeController.upsertTitle);
-
 router.post("/title", EmployeeController.insertTitle);
 
-// update employee department
-router.put("/department", async (req, res) => {
-  const { employee_id, department_id, from_date, to_date } = req.body;
-
-  const data: department_employee = {
-    employee_id: BigInt(employee_id),
-    department_id: department_id,
-    from_date: new Date(from_date),
-    to_date: new Date(to_date),
-  };
-
-  const oldDepartment = await prisma.department_employee.findFirst({
-    where: { employee_id: data.employee_id },
-    orderBy: { from_date: "desc" },
-  });
-
-  if (!oldDepartment)
-    throw `employee_id: ${data.employee_id} does not exist
-    in Department table. Nothing to update.`;
-
-  await prisma.department_employee.update({
-    where: {
-      employee_id_department_id: {
-        employee_id: data.employee_id,
-        department_id: oldDepartment.department_id,
-      },
-    },
-    data: { to_date: data.from_date },
-  });
-
-  const newDepartment = await prisma.department_employee.create({ data: data });
-
-  res.json({
-    old_department: jsonParseBigInt(oldDepartment),
-    new_department: jsonParseBigInt(newDepartment),
-  });
-});
-
-router.post("/department", async (req, res) => {
-  const { employee_id, department_id, from_date, to_date } = req.body;
-
-  const newDepartment = await prisma.department_employee.create({
-    data: {
-      employee_id: BigInt(employee_id),
-      department_id: department_id,
-      from_date: new Date(from_date),
-      to_date: new Date(to_date),
-    },
-  });
-
-  res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
-});
+router.put("/department", EmployeeController.upsertDepartment);
+router.post("/department", EmployeeController.insertDepartment);
 
 // delete employee
-router.delete("/", async (req, res) => {
-  const employee = await prisma.employee.delete({
-    where: {
-      id: parseInt(req.body.id),
-    },
-  });
-  res.json({ deletedUser: jsonParseBigInt(employee) });
-});
+router.delete("/", EmployeeController.deleteEmployee);
 
 // get employee by first name
 router.get("/firstName/:name", async (req, res) => {
