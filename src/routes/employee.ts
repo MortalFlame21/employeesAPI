@@ -1,9 +1,8 @@
 import express from "express";
-import {
-  PrismaClient,
-  type department_employee,
-  type salary,
-} from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+
+import EmployeeController from "@/controller/employee.js";
+
 import { jsonParseBigInt } from "../utils/jsonUtils.js";
 
 const router = express.Router();
@@ -15,23 +14,20 @@ const prisma = new PrismaClient();
     title, salary, department
 */
 
-import EmployeeController from "@/controller/employee.js";
-
 // get all employees
 router.get("/", EmployeeController.getEmployees);
 
 // create employee
 router.post("/", EmployeeController.createEmployee);
 
+// /salary, /title, /department do the same
 // changes salary, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
 // would like to redirect to POST instead???
 router.put("/salary", EmployeeController.upsertSalary);
-// adds salary to employee
+// adds salary to employee not in the table
 router.post("/salary", EmployeeController.insertSalary);
 
-// changes title, if employee_id exists in the table
-// it then updates old_to_date to new_from_date
 router.put("/title", EmployeeController.upsertTitle);
 router.post("/title", EmployeeController.insertTitle);
 
