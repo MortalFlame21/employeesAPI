@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 router.get("/", async (req, res) => {
   const managers = await prisma.department_manager.findMany({
     take: 10,
-    skip: 1,
+    skip: 0,
   });
   res.send(jsonParseBigInt(managers));
 });

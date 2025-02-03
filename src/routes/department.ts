@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 router.get("/", async (req, res) => {
   const departments = await prisma.department.findMany({
     take: 10,
-    skip: 1,
+    skip: 0,
   });
   res.send(departments);
 });
@@ -24,7 +24,7 @@ router.get("/:department_id", async (req, res) => {
   const employees = await prisma.department_employee.findMany({
     where: { department_id: department_id },
     take: 10,
-    skip: 1,
+    skip: 0,
   });
   const employees_ = await prisma.employee.findMany({
     where: {
