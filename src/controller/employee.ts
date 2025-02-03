@@ -48,6 +48,15 @@ const EmployeeController = {
     res.json({ new_employee: jsonParseBigInt(newEmployee) });
   },
 
+  deleteEmployee: async (req: Request, res: Response) => {
+    const employee = await prisma.employee.delete({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    });
+    res.json({ deletedUser: jsonParseBigInt(employee) });
+  },
+
   upsertSalary: async (req: Request, res: Response) => {
     const { employee_id, amount, from_date, to_date } = req.body;
 
@@ -206,15 +215,6 @@ const EmployeeController = {
     });
 
     res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
-  },
-
-  deleteEmployee: async (req: Request, res: Response) => {
-    const employee = await prisma.employee.delete({
-      where: {
-        id: parseInt(req.body.id),
-      },
-    });
-    res.json({ deletedUser: jsonParseBigInt(employee) });
   },
 
   findByFirstName: async (req: Request, res: Response) => {
