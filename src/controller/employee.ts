@@ -216,6 +216,84 @@ const EmployeeController = {
     });
     res.json({ deletedUser: jsonParseBigInt(employee) });
   },
+
+  findByFirstName: async (req: Request, res: Response) => {
+    const employee = await prisma.employee.findFirst({
+      where: {
+        first_name: {
+          equals: req.params.name,
+          mode: "insensitive",
+        },
+      },
+    });
+    res.json(jsonParseBigInt(employee));
+  },
+
+  findByTitle: async (req: Request, res: Response) => {
+    const employees = await prisma.title.findMany({
+      where: {
+        title: {
+          equals: req.params.title,
+          mode: "insensitive",
+        },
+      },
+      take: 10,
+      skip: 1,
+    });
+    const employees_ = await prisma.employee.findMany({
+      where: {
+        id: {
+          in: employees.map(({ employee_id }) => {
+            return employee_id;
+          }),
+        },
+      },
+    });
+    res.send({ employees: jsonParseBigInt(employees_) });
+  },
+
+  findBySalary: async (req: Request, res: Response) => {
+    const min_salary = BigInt((req.query.min_salary as string) || 1);
+    const max_salary = BigInt((req.query.max_salary as string) || 999999);
+    const employees = await prisma.salary.findMany({
+      where: {
+        amount: {
+          gte: min_salary,
+          lte: max_salary,
+        },
+      },
+      take: 10,
+      skip: 0,
+      distinct: ["employee_id"],
+    });
+    const employees_ = await prisma.employee.findMany({
+      where: {
+        id: {
+          in: employees.map(({ employee_id }) => {
+            return employee_id;
+          }),
+        },
+      },
+    });
+    res.send({ employees: jsonParseBigInt(employees_) });
+  },
+
+  findByHireDate: async (req: Request, res: Response) => {
+    const start_hire_date = new Date(req.query.start_hire_date as string);
+    const end_hire_date = new Date(req.query.end_hire_date as string);
+    const employees = await prisma.employee.findMany({
+      where: {
+        hire_date: {
+          gte: start_hire_date,
+          lte: end_hire_date,
+        },
+      },
+      take: 10,
+      skip: 0,
+      distinct: ["id"],
+    });
+    res.send({ employees: jsonParseBigInt(employees) });
+  },
 };
 
 export default EmployeeController;

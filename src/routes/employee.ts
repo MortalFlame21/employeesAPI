@@ -42,89 +42,19 @@ router.post("/department", EmployeeController.insertDepartment);
 router.delete("/", EmployeeController.deleteEmployee);
 
 // get employee by first name
-router.get("/firstName/:name", async (req, res) => {
-  const employee = await prisma.employee.findFirst({
-    where: {
-      first_name: {
-        equals: req.params.name,
-        mode: "insensitive",
-      },
-    },
-  });
-  res.json(jsonParseBigInt(employee));
-});
+router.get("/firstName/:name", EmployeeController.findByFirstName);
 
 // for below I would like to combine, the following 3 into a query
 // for the GET request
 
 // get employees by title
-router.get("/title/:title", async (req, res) => {
-  const employees = await prisma.title.findMany({
-    where: {
-      title: {
-        equals: req.params.title,
-        mode: "insensitive",
-      },
-    },
-    take: 10,
-    skip: 1,
-  });
-  const employees_ = await prisma.employee.findMany({
-    where: {
-      id: {
-        in: employees.map(({ employee_id }) => {
-          return employee_id;
-        }),
-      },
-    },
-  });
-  res.send({ employees: jsonParseBigInt(employees_) });
-});
+router.get("/title/:title", EmployeeController.findByTitle);
 
 // get employees by salary range
-router.get("/salary", async (req, res) => {
-  const min_salary = BigInt((req.query.min_salary as string) || 1);
-  const max_salary = BigInt((req.query.max_salary as string) || 999999);
-  const employees = await prisma.salary.findMany({
-    where: {
-      amount: {
-        gte: min_salary,
-        lte: max_salary,
-      },
-    },
-    take: 10,
-    skip: 0,
-    distinct: ["employee_id"],
-  });
-  const employees_ = await prisma.employee.findMany({
-    where: {
-      id: {
-        in: employees.map(({ employee_id }) => {
-          return employee_id;
-        }),
-      },
-    },
-  });
-  res.send({ employees: jsonParseBigInt(employees_) });
-});
+router.get("/salary", EmployeeController.findBySalary);
 
 // get employees by hire_date range
-router.get("/hired", async (req, res) => {
-  const start_hire_date = new Date(req.query.start_hire_date as string);
-  const end_hire_date = new Date(req.query.end_hire_date as string);
-  const employees = await prisma.employee.findMany({
-    where: {
-      hire_date: {
-        gte: start_hire_date,
-        lte: end_hire_date,
-      },
-    },
-    take: 10,
-    skip: 0,
-    distinct: ["id"],
-  });
-  res.send({ employees: jsonParseBigInt(employees) });
-});
+router.get("/hired", EmployeeController.findByHireDate);
 
 // get employee by id
 router.get("/:id", async (req, res) => {
@@ -149,4 +79,5 @@ router.get("/:id/title", async (req, res) => {
   });
   res.json(jsonParseBigInt(employeeTitle));
 });
+
 export default router;
