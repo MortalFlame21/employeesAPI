@@ -118,13 +118,13 @@ router.post("/salary", async (req, res) => {
 // changes title, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
 router.put("/title", async (req, res) => {
-  const { employeeID, title, fromDate, toDate } = req.body;
+  const { employee_id, title, from_date, to_date } = req.body;
 
   const data = {
-    employee_id: parseInt(employeeID),
+    employee_id: parseInt(employee_id),
     title: title,
-    from_date: new Date(fromDate),
-    to_date: new Date(toDate),
+    from_date: new Date(from_date),
+    to_date: new Date(to_date),
   };
 
   const oldTitle = await prisma.title.findFirst({
@@ -156,14 +156,14 @@ router.put("/title", async (req, res) => {
 });
 
 router.post("/title", async (req, res) => {
-  const { employeeID, title, fromDate, toDate } = req.body;
+  const { employee_id, title, from_date, to_date } = req.body;
 
   const newTitle = await prisma.title.create({
     data: {
-      employee_id: parseInt(employeeID),
+      employee_id: parseInt(employee_id),
       title: title,
-      from_date: new Date(fromDate),
-      to_date: new Date(toDate),
+      from_date: new Date(from_date),
+      to_date: new Date(to_date),
     },
   });
 
