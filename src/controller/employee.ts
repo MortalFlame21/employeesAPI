@@ -9,6 +9,27 @@ import { jsonParseBigInt } from "../utils/jsonUtils.js";
 const prisma = new PrismaClient();
 
 const EmployeeController = {
+  getEmployee: async (req: Request, res: Response) => {
+    const employee = await prisma.employee.findFirst({
+      where: { id: parseInt(req.params.id ?? "0") },
+    });
+    res.json(jsonParseBigInt(employee));
+  },
+
+  getEmployeeSalary: async (req: Request, res: Response) => {
+    const employeeSalary = await prisma.salary.findFirst({
+      where: { employee_id: parseInt(req.params.id ?? "0") },
+    });
+    res.json(jsonParseBigInt(employeeSalary));
+  },
+
+  getEmployeeTitle: async (req: Request, res: Response) => {
+    const employeeTitle = await prisma.title.findFirst({
+      where: { employee_id: parseInt(req.params.id ?? "0") },
+    });
+    res.json(jsonParseBigInt(employeeTitle));
+  },
+
   createEmployee: async (req: Request, res: Response) => {
     const { id, birth_date, first_name, last_name, gender, hire_date } =
       req.body;

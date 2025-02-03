@@ -52,28 +52,12 @@ router.get("/salary", EmployeeController.findBySalary);
 // get employees by hire_date range
 router.get("/hired", EmployeeController.findByHireDate);
 
+// would like the following 3 to conjoin into 1 route
 // get employee by id
-router.get("/:id", async (req, res) => {
-  const employee = await prisma.employee.findFirst({
-    where: { id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employee));
-});
-
+router.get("/:id", EmployeeController.getEmployee);
 // get salary of employee by id
-router.get("/:id/salary", async (req, res) => {
-  const employeeSalary = await prisma.salary.findFirst({
-    where: { employee_id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employeeSalary));
-});
-
+router.get("/:id/salary", EmployeeController.getEmployeeSalary);
 // get title of employee by id
-router.get("/:id/title", async (req, res) => {
-  const employeeTitle = await prisma.title.findFirst({
-    where: { employee_id: parseInt(req.params.id) },
-  });
-  res.json(jsonParseBigInt(employeeTitle));
-});
+router.get("/:id/title", EmployeeController.getEmployeeTitle);
 
 export default router;
