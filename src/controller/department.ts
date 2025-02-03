@@ -1,10 +1,5 @@
 import { type Request, type Response } from "express";
-import {
-  PrismaClient,
-  type department_employee,
-  type salary,
-} from "@prisma/client";
-import { jsonParseBigInt } from "../utils/jsonUtils.js";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
