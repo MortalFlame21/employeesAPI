@@ -1,12 +1,8 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
 import EmployeeController from "@/controller/employee.js";
 
-import { jsonParseBigInt } from "../utils/jsonUtils.js";
-
 const router = express.Router();
-const prisma = new PrismaClient();
 
 /*
   todo:
