@@ -8,13 +8,16 @@ type z_Request = {
 };
 
 type z_RequestError = {
-  type: keyof Required<z_Request>;
+  error_type: keyof Required<z_Request>;
   errors: ZodError;
 };
 
 function fmtRequestErrors(errors: z_RequestError[]) {
   return errors.map((e) => {
-    return { type: `${e.type} Error.`, issues: fmtZodIssues(e.errors.issues) };
+    return {
+      type: `${e.error_type} Error.`,
+      issues: fmtZodIssues(e.errors.issues),
+    };
   });
 }
 
@@ -34,15 +37,16 @@ function parseRequestData(
   const data = req[key];
   const parsed = schema[key].safeParse(data);
 
-  if (parsed.error) return { type: key, errors: parsed.error };
+  if (parsed.error) return { error_type: key, errors: parsed.error };
 
   req[key] = parsed.data;
 }
 
 export function validateRequest(schema: z_Request) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    let errors: z_RequestError[] = [];
     try {
+      let errors: z_RequestError[] = [];
+
       const bodyErr = parseRequestData(schema, "body", req);
       if (bodyErr) errors.push(bodyErr);
 
@@ -55,8 +59,23 @@ export function validateRequest(schema: z_Request) {
       if (errors.length == 0) return next();
       res.status(400).json(fmtRequestErrors(errors));
     } catch (e) {
-      console.log(e);
-      res.status(400).json("some error");
+      let error, type;
+
+      if (e instanceof ZodError) {
+        error = fmtZodIssues(e.issues);
+        type = "ZodError";
+      } else if (e instanceof Error) {
+        error = e.message;
+        type = e.name;
+      } else {
+        error = String(e);
+        type = "UnknownError";
+      }
+
+      res.status(400).json({
+        error_type: type,
+        error: error,
+      });
     }
   };
 }
