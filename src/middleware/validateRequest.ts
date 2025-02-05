@@ -1,4 +1,4 @@
-import { resReportErrors } from "@/utils/errors.js";
+import { reportErrors } from "@/utils/errors.js";
 import type { Response, Request, NextFunction } from "express";
 import { ZodError, type AnyZodObject, type ZodIssue } from "zod";
 
@@ -60,7 +60,7 @@ export default function validateRequest(schema: z_Request) {
       if (errors.length == 0) return next();
       res.status(400).json(fmtRequestErrors(errors));
     } catch (e) {
-      resReportErrors(e, res);
+      res.status(400).json(reportErrors(e));
     }
   };
 }
