@@ -1,9 +1,8 @@
-import type { Response } from "express";
 import { ZodError } from "zod";
 
 import { fmtZodIssues } from "@/middleware/validateRequest.js";
 
-export function resReportErrors(e: unknown, res: Response) {
+export function reportErrors(e: unknown) {
   let error, type;
 
   console.log(e);
@@ -18,9 +17,5 @@ export function resReportErrors(e: unknown, res: Response) {
     error = String(e);
     type = "UnknownError";
   }
-
-  res.status(400).json({
-    error_type: type,
-    error: error,
-  });
+  return { error_type: type, error: error };
 }

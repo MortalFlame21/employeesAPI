@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 
 import { jsonParseBigInt } from "../utils/jsonUtils.js";
-import { resReportErrors } from "@/utils/errors.js";
+import { reportErrors } from "@/utils/errors.js";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +18,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employee));
     } catch (e) {
-      resReportErrors(e, res);
+      res.send(400).json(reportErrors(e));
     }
   },
 
@@ -29,7 +29,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employeeSalary));
     } catch (e) {
-      resReportErrors(e, res);
+      res.send(400).json(reportErrors(e));
     }
   },
 
