@@ -1,3 +1,4 @@
+import { resReportErrors } from "@/utils/errors.js";
 import type { Response, Request, NextFunction } from "express";
 import { ZodError, type AnyZodObject, type ZodIssue } from "zod";
 
@@ -12,7 +13,7 @@ type z_RequestError = {
   errors: ZodError;
 };
 
-function fmtRequestErrors(errors: z_RequestError[]) {
+export function fmtRequestErrors(errors: z_RequestError[]) {
   return errors.map((e) => {
     return {
       error_type: `${e.error_type} Error.`,
@@ -21,7 +22,7 @@ function fmtRequestErrors(errors: z_RequestError[]) {
   });
 }
 
-function fmtZodIssues(issues: ZodIssue[]) {
+export function fmtZodIssues(issues: ZodIssue[]) {
   return issues.map((i) => {
     return `${i.path.join(", ")} ${i.message}, ${i.code}.`;
   });
@@ -42,7 +43,7 @@ function parseRequestData(
   req[key] = parsed.data;
 }
 
-export function validateRequest(schema: z_Request) {
+export default function validateRequest(schema: z_Request) {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
       let errors: z_RequestError[] = [];
@@ -59,23 +60,7 @@ export function validateRequest(schema: z_Request) {
       if (errors.length == 0) return next();
       res.status(400).json(fmtRequestErrors(errors));
     } catch (e) {
-      let error, type;
-
-      if (e instanceof ZodError) {
-        error = fmtZodIssues(e.issues);
-        type = "ZodError";
-      } else if (e instanceof Error) {
-        error = e.message;
-        type = e.name;
-      } else {
-        error = String(e);
-        type = "UnknownError";
-      }
-
-      res.status(400).json({
-        error_type: type,
-        error: error,
-      });
+      resReportErrors(e, res);
     }
   };
 }
