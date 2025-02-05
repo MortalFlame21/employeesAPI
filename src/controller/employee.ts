@@ -23,10 +23,14 @@ const EmployeeController = {
   },
 
   getEmployeeSalary: async (req: Request, res: Response) => {
-    const employeeSalary = await prisma.salary.findFirst({
-      where: { employee_id: parseInt(req.params.id ?? "0") },
-    });
-    res.json(jsonParseBigInt(employeeSalary));
+    try {
+      const employeeSalary = await prisma.salary.findFirst({
+        where: { employee_id: parseInt(req.params.id ?? "0") },
+      });
+      res.json(jsonParseBigInt(employeeSalary));
+    } catch (e) {
+      resReportErrors(e, res);
+    }
   },
 
   getEmployeeTitle: async (req: Request, res: Response) => {

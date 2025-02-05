@@ -4,6 +4,7 @@ import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
+
 const router = express.Router();
 
 /*
@@ -56,7 +57,11 @@ router.get(
   EmployeeController.getEmployee
 );
 // get salary of employee by id
-router.get("/:id/salary", EmployeeController.getEmployeeSalary);
+router.get(
+  "/:id/salary",
+  validateRequest({ params: z_employeeSchema.pick({ id: true }) }),
+  EmployeeController.getEmployeeSalary
+);
 // get title of employee by id
 router.get("/:id/title", EmployeeController.getEmployeeTitle);
 
