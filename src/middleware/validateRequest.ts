@@ -7,12 +7,12 @@ type z_Request = {
   query?: AnyZodObject;
 };
 
-type z_RequestErrors = {
+type z_RequestError = {
   type: keyof Required<z_Request>;
   errors: ZodError;
 };
 
-function fmtRequestErrors(errors: z_RequestErrors[]) {
+function fmtRequestErrors(errors: z_RequestError[]) {
   return errors.map((e) => {
     return { type: `${e.type} Error.`, issues: fmtZodIssues(e.errors.issues) };
   });
@@ -24,42 +24,36 @@ function fmtZodIssues(issues: ZodIssue[]) {
   });
 }
 
+function parseRequestData(
+  schema: z_Request,
+  key: keyof z_Request,
+  req: Request
+): z_RequestError | undefined {
+  if (!schema[key]) return;
+
+  const data = req[key];
+  const parsed = schema[key].safeParse(data);
+
+  if (parsed.error) return { type: key, errors: parsed.error };
+
+  req[key] = parsed.data;
+}
+
 export function validateRequest(schema: z_Request) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    let errors: z_RequestErrors[] = [];
+    let errors: z_RequestError[] = [];
     try {
-      if (schema.body) {
-        const parsedBody = schema.body.safeParse(req.body);
+      const bodyErr = parseRequestData(schema, "body", req);
+      if (bodyErr) errors.push(bodyErr);
 
-        if (parsedBody.error) {
-          errors.push({ type: "body", errors: parsedBody.error });
-        } else {
-          req.params = parsedBody.data;
-        }
-      }
-      if (schema.params) {
-        const parsedParams = schema.params.safeParse(req.params);
+      const paramsErr = parseRequestData(schema, "params", req);
+      if (paramsErr) errors.push(paramsErr);
 
-        if (parsedParams.error) {
-          errors.push({ type: "params", errors: parsedParams.error });
-        } else {
-          req.params = parsedParams.data;
-        }
-      }
-      if (schema.query) {
-        const parsedQuery = schema.query.safeParse(req.query);
+      const queryErr = parseRequestData(schema, "query", req);
+      if (queryErr) errors.push(queryErr);
 
-        if (parsedQuery.error) {
-          errors.push({ type: "query", errors: parsedQuery.error });
-        } else {
-          req.query = parsedQuery.data;
-        }
-      }
-      if (errors.length > 0) {
-        res.status(400).json(fmtRequestErrors(errors));
-        return;
-      }
-      next();
+      if (errors.length == 0) return next();
+      res.status(400).json(fmtRequestErrors(errors));
     } catch (e) {
       console.log(e);
       res.status(400).json("some error");
