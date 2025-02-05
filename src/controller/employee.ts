@@ -14,7 +14,7 @@ const EmployeeController = {
   getEmployee: async (req: Request, res: Response) => {
     try {
       const employee = await prisma.employee.findFirst({
-        where: { id: parseInt(req.params.id ?? "0sssss") },
+        where: { id: parseInt(req.params.id ?? "0") },
       });
       res.json(jsonParseBigInt(employee));
     } catch (e) {
