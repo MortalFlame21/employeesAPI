@@ -34,10 +34,14 @@ const EmployeeController = {
   },
 
   getEmployeeTitle: async (req: Request, res: Response) => {
-    const employeeTitle = await prisma.title.findFirst({
-      where: { employee_id: parseInt(req.params.id ?? "0") },
-    });
-    res.json(jsonParseBigInt(employeeTitle));
+    try {
+      const employeeTitle = await prisma.title.findFirst({
+        where: { employee_id: parseInt(req.params.id ?? "0") },
+      });
+      res.json(jsonParseBigInt(employeeTitle));
+    } catch (e) {
+      res.send(400).json(reportErrors(e));
+    }
   },
 
   createEmployee: async (req: Request, res: Response) => {

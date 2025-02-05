@@ -63,6 +63,10 @@ router.get(
   EmployeeController.getEmployeeSalary
 );
 // get title of employee by id
-router.get("/:id/title", EmployeeController.getEmployeeTitle);
+router.get(
+  "/:id/title",
+  validateRequest({ params: z_employeeSchema.pick({ id: true }) }),
+  EmployeeController.getEmployeeTitle
+);
 
 export default router;
