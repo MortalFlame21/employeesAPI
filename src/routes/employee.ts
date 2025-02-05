@@ -1,7 +1,9 @@
 import express from "express";
 
 import EmployeeController from "@/controller/employee.js";
+import { validateRequest } from "@/middleware/validateRequest.js";
 
+import { z_employeeSchema } from "@/schema/schema.prisma.js";
 const router = express.Router();
 
 /*
@@ -48,7 +50,11 @@ router.post("/department", EmployeeController.insertDepartment);
 
 // would like the following 3 to conjoin into 1 route
 // get employee by id
-router.get("/:id", EmployeeController.getEmployee);
+router.get(
+  "/:id",
+  validateRequest({ params: z_employeeSchema.pick({ id: true }) }),
+  EmployeeController.getEmployee
+);
 // get salary of employee by id
 router.get("/:id/salary", EmployeeController.getEmployeeSalary);
 // get title of employee by id
