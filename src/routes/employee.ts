@@ -1,7 +1,7 @@
 import express from "express";
 
 import EmployeeController from "@/controller/employee.js";
-import { validateRequest } from "@/middleware/validateRequest.js";
+import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
 const router = express.Router();
