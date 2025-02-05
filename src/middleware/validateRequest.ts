@@ -15,7 +15,7 @@ type z_RequestError = {
 function fmtRequestErrors(errors: z_RequestError[]) {
   return errors.map((e) => {
     return {
-      type: `${e.error_type} Error.`,
+      error_type: `${e.error_type} Error.`,
       issues: fmtZodIssues(e.errors.issues),
     };
   });
