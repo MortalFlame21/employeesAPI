@@ -14,7 +14,11 @@ const router = express.Router();
 */
 
 // create employee
-router.post("/", EmployeeController.createEmployee);
+router.post(
+  "/",
+  validateRequest({ body: z_employeeSchema }),
+  EmployeeController.createEmployee
+);
 // delete employee
 router.delete("/", EmployeeController.deleteEmployee);
 

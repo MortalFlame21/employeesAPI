@@ -45,21 +45,25 @@ const EmployeeController = {
   },
 
   createEmployee: async (req: Request, res: Response) => {
-    const { id, birth_date, first_name, last_name, gender, hire_date } =
-      req.body;
+    try {
+      const { id, birth_date, first_name, last_name, gender, hire_date } =
+        req.body;
 
-    const newEmployee = await prisma.employee.create({
-      data: {
-        id: BigInt(id),
-        birth_date: new Date(birth_date),
-        first_name: first_name,
-        last_name: last_name,
-        gender: gender,
-        hire_date: new Date(hire_date),
-      },
-    });
+      const newEmployee = await prisma.employee.create({
+        data: {
+          id: BigInt(id),
+          birth_date: new Date(birth_date),
+          first_name: first_name,
+          last_name: last_name,
+          gender: gender,
+          hire_date: new Date(hire_date),
+        },
+      });
 
-    res.json({ new_employee: jsonParseBigInt(newEmployee) });
+      res.json({ new_employee: jsonParseBigInt(newEmployee) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   deleteEmployee: async (req: Request, res: Response) => {
