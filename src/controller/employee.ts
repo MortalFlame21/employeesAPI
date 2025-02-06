@@ -7,6 +7,7 @@ import {
 
 import { jsonParseBigInt } from "../utils/jsonUtils.js";
 import { reportErrors } from "@/utils/errors.js";
+import { paginationPageOffset } from "@/utils/routes.js";
 
 const prisma = new PrismaClient();
 
@@ -97,22 +98,17 @@ const EmployeeController = {
 
   getEmployees: async (req: Request, res: Response) => {
     try {
-      let offset = parseInt(req.query.offset as string) ?? 0;
-      let limit = parseInt(req.query.limit as string) ?? 10;
-      if (limit > 100) limit = 100;
-
-      const end = offset * limit;
-      const nextPage = `${req.baseUrl}/?offset=${end}&limit=${limit}`;
+      const pgn = paginationPageOffset(req);
 
       const employees = await prisma.employee.findMany({
-        skip: offset,
-        take: limit,
+        skip: pgn.offset,
+        take: pgn.limit,
       });
 
       res.json({
-        offset: offset,
-        limit: limit,
-        nextPage: nextPage,
+        offset: pgn.offset,
+        limit: pgn.limit,
+        nextPage: pgn.nextPage,
         results: jsonParseBigInt(employees),
       });
     } catch (e) {

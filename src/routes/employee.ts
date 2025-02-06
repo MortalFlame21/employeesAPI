@@ -4,7 +4,7 @@ import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
-import { z_pageOffset } from "@/schema/routes.js";
+import { z_pageOffset } from "@/utils/routes.js";
 
 const router = express.Router();
 
