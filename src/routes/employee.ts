@@ -3,7 +3,7 @@ import express from "express";
 import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
-import { z_employeeSchema } from "@/schema/schema.prisma.js";
+import { z_date, z_employeeSchema } from "@/schema/schema.prisma.js";
 import { z_paginationPageOffset } from "@/utils/routes.js";
 import { z } from "zod";
 
@@ -61,7 +61,16 @@ router.get(
   EmployeeController.findBySalary
 );
 // get employees by hire_date range
-router.get("/hired", EmployeeController.findByHireDate);
+router.get(
+  "/hired",
+  validateRequest({
+    query: z_paginationPageOffset.extend({
+      start_hire_date: z_date,
+      end_hire_date: z_date.max(new Date("9999-01-01")),
+    }),
+  }),
+  EmployeeController.findByHireDate
+);
 // get employees by department
 // remember id can only be char(4)
 router.get("/department", EmployeeController.findByDepartment);
