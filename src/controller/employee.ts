@@ -221,24 +221,36 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
   },
 
   findByDepartment: async (req: Request, res: Response) => {
-    // if i want to use "joins"
-    // https://www.prisma.io/blog/prisma-orm-now-lets-you-choose-the-best-join-strategy-preview
-    const department_id = (req.query.department_id as string) ?? "";
-    const employees = await prisma.department_employee.findMany({
-      where: { department_id: department_id },
-      take: 10,
-      skip: 0,
-    });
-    const employees_ = await prisma.employee.findMany({
-      where: {
-        id: {
-          in: employees.map(({ employee_id }) => {
-            return employee_id;
-          }),
+    try {
+      // if i want to use "joins"
+      // https://www.prisma.io/blog/prisma-orm-now-lets-you-choose-the-best-join-strategy-preview
+      const pgn = paginationPageOffset(req.query.offset, req.query.limit);
+      const department_id = (req.query.department_id as string) ?? "";
+      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}&\
+  department_id=${department_id}`;
+      const employees = await prisma.department_employee.findMany({
+        where: { department_id: department_id },
+        take: pgn.limit,
+        skip: pgn.offset,
+      });
+      const employees_ = await prisma.employee.findMany({
+        where: {
+          id: {
+            in: employees.map(({ employee_id }) => {
+              return employee_id;
+            }),
+          },
         },
-      },
-    });
-    res.json({ employees: jsonParseBigInt(employees_) });
+      });
+      res.json({
+        offset: pgn.offset,
+        limit: pgn.limit,
+        employees: jsonParseBigInt(employees_),
+        next_page: nextPage,
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   upsertSalary: async (req: Request, res: Response) => {

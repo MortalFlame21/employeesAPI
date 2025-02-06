@@ -3,7 +3,11 @@ import express from "express";
 import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
-import { z_date, z_employeeSchema } from "@/schema/schema.prisma.js";
+import {
+  z_date,
+  z_employeeDepartmentSchema,
+  z_employeeSchema,
+} from "@/schema/schema.prisma.js";
 import { z_paginationPageOffset } from "@/utils/routes.js";
 import { z } from "zod";
 
@@ -73,7 +77,15 @@ router.get(
 );
 // get employees by department
 // remember id can only be char(4)
-router.get("/department", EmployeeController.findByDepartment);
+router.get(
+  "/department",
+  validateRequest({
+    query: z_paginationPageOffset.extend({
+      department_id: z.string().min(4).max(4),
+    }),
+  }),
+  EmployeeController.findByDepartment
+);
 
 // /salary, /title, /department do the same
 // changes salary, if employee_id exists in the table
