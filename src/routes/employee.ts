@@ -7,6 +7,7 @@ import {
   z_date,
   z_employeeDepartmentSchema,
   z_employeeSchema,
+  z_salarySchema,
 } from "@/schema/schema.prisma.js";
 import { z_paginationPageOffset } from "@/utils/routes.js";
 import { z } from "zod";
@@ -91,15 +92,35 @@ router.get(
 // changes salary, if employee_id exists in the table
 // it then updates old_to_date to new_from_date
 // would like to redirect to POST instead???
-router.put("/salary", EmployeeController.upsertSalary);
+router.put(
+  "/salary",
+  validateRequest({
+    body: z_salarySchema,
+  }),
+  EmployeeController.upsertSalary
+);
 // adds salary to employee not in the table
-router.post("/salary", EmployeeController.insertSalary);
+router.post(
+  "/salary",
+  validateRequest({
+    body: z_salarySchema,
+  }),
+  EmployeeController.insertSalary
+);
 
-router.put("/title", EmployeeController.upsertTitle);
-router.post("/title", EmployeeController.insertTitle);
+router.put("/title", validateRequest({}), EmployeeController.upsertTitle);
+router.post("/title", validateRequest({}), EmployeeController.insertTitle);
 
-router.put("/department", EmployeeController.upsertDepartment);
-router.post("/department", EmployeeController.insertDepartment);
+router.put(
+  "/department",
+  validateRequest({}),
+  EmployeeController.upsertDepartment
+);
+router.post(
+  "/department",
+  validateRequest({}),
+  EmployeeController.insertDepartment
+);
 
 // would like the following 3 to conjoin into 1 route
 // get employee by id
