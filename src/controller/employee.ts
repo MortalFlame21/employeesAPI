@@ -109,7 +109,7 @@ const EmployeeController = {
       res.json({
         offset: pgn.offset,
         limit: pgn.limit,
-        nextPage: nextPage,
+        next_page: nextPage,
         results: jsonParseBigInt(employees),
       });
     } catch (e) {
@@ -119,6 +119,9 @@ const EmployeeController = {
 
   findByTitle: async (req: Request, res: Response) => {
     try {
+      const pgn = paginationPageOffset(req.query.offset, req.query.limit);
+      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}`;
+
       const employees = await prisma.title.findMany({
         where: {
           title: {
@@ -126,8 +129,8 @@ const EmployeeController = {
             mode: "insensitive",
           },
         },
-        take: 10,
-        skip: 1,
+        take: pgn.limit,
+        skip: pgn.offset,
       });
       const employees_ = await prisma.employee.findMany({
         where: {
@@ -138,34 +141,54 @@ const EmployeeController = {
           },
         },
       });
-      res.send({ employees: jsonParseBigInt(employees_) });
-    } catch (e) {}
+      res.json({
+        offset: pgn.offset,
+        limit: pgn.limit,
+        results: jsonParseBigInt(employees_),
+        next_page: nextPage,
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   findBySalary: async (req: Request, res: Response) => {
-    const min_salary = BigInt((req.query.min_salary as string) || 1);
-    const max_salary = BigInt((req.query.max_salary as string) || 999999);
-    const employees = await prisma.salary.findMany({
-      where: {
-        amount: {
-          gte: min_salary,
-          lte: max_salary,
+    try {
+      const pgn = paginationPageOffset(req.query.offset, req.query.limit);
+
+      const min_salary = BigInt((req.query.min_salary as string) ?? 1);
+      const max_salary = BigInt((req.query.max_salary as string) ?? 999999);
+      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}\
+&min_salary=${min_salary}&max_salary=${max_salary}`;
+      const employees = await prisma.salary.findMany({
+        where: {
+          amount: {
+            gte: min_salary,
+            lte: max_salary,
+          },
         },
-      },
-      take: 10,
-      skip: 0,
-      distinct: ["employee_id"],
-    });
-    const employees_ = await prisma.employee.findMany({
-      where: {
-        id: {
-          in: employees.map(({ employee_id }) => {
-            return employee_id;
-          }),
+        take: pgn.limit,
+        skip: pgn.offset,
+        distinct: ["employee_id"],
+      });
+      const employees_ = await prisma.employee.findMany({
+        where: {
+          id: {
+            in: employees.map(({ employee_id }) => {
+              return employee_id;
+            }),
+          },
         },
-      },
-    });
-    res.send({ employees: jsonParseBigInt(employees_) });
+      });
+      res.json({
+        offset: pgn.offset,
+        limit: pgn.limit,
+        employees: jsonParseBigInt(employees_),
+        next_page: nextPage,
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   findByHireDate: async (req: Request, res: Response) => {

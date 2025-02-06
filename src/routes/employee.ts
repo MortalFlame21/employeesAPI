@@ -5,6 +5,7 @@ import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
 import { z_paginationPageOffset } from "@/utils/routes.js";
+import { z } from "zod";
 
 const router = express.Router();
 
@@ -43,9 +44,22 @@ router.get(
   EmployeeController.getEmployees
 );
 // get employees by title
-router.get("/title/:title", EmployeeController.findByTitle);
+router.get(
+  "/title/:title",
+  validateRequest({ query: z_paginationPageOffset }),
+  EmployeeController.findByTitle
+);
 // get employees by salary range
-router.get("/salary", EmployeeController.findBySalary);
+router.get(
+  "/salary",
+  validateRequest({
+    query: z_paginationPageOffset.extend({
+      min_salary: z.coerce.number().gte(0).safe().optional().default(0),
+      max_salary: z.coerce.number().gte(0).safe().optional().default(999999),
+    }),
+  }),
+  EmployeeController.findBySalary
+);
 // get employees by hire_date range
 router.get("/hired", EmployeeController.findByHireDate);
 // get employees by department
