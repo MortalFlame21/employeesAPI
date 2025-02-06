@@ -21,7 +21,7 @@ export function paginationPageOffset(req: Request) {
 }
 
 // ** zod types **
-export const z_pageOffset = z.object({
+export const z_paginationPageOffset = z.object({
   offset: z.coerce.number().gte(0).int().safe().optional().default(0),
   limit: z.coerce.number().gte(0).int().safe().optional().default(10),
 });

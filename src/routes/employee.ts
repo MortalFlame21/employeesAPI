@@ -4,7 +4,7 @@ import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
-import { z_pageOffset } from "@/utils/routes.js";
+import { z_paginationPageOffset } from "@/utils/routes.js";
 
 const router = express.Router();
 
@@ -39,7 +39,7 @@ router.get(
 // get all employees
 router.get(
   "/",
-  validateRequest({ query: z_pageOffset }),
+  validateRequest({ query: z_paginationPageOffset }),
   EmployeeController.getEmployees
 );
 // get employees by title
