@@ -1,15 +1,28 @@
 import { type Request, type Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { reportErrors } from "@/utils/errors.js";
+import { paginationPageOffset } from "@/utils/routes.js";
 
 const prisma = new PrismaClient();
 
 const DepartmentController = {
   getDepartments: async (req: Request, res: Response) => {
-    const departments = await prisma.department.findMany({
-      take: 10,
-      skip: 0,
-    });
-    res.send(departments);
+    try {
+      const pgn = paginationPageOffset(req.query.offset, req.query.limit);
+      const nextPage = `${req.baseUrl}/&offset=${pgn.end}&limit=${pgn.limit}`;
+      const departments = await prisma.department.findMany({
+        take: pgn.limit,
+        skip: pgn.offset,
+      });
+      res.send({
+        offset: pgn.offset,
+        limit: pgn.limit,
+        results: departments,
+        next_page: nextPage,
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   createDepartment: async (req: Request, res: Response) => {
