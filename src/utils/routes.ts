@@ -1,22 +1,22 @@
-import type { Request } from "express";
 import { z } from "zod";
+import type { ParsedQs } from "qs";
 
 // **
 // Some helper for route validation
 // **
 
+type reqQuery = undefined | string | ParsedQs | string[] | ParsedQs[];
+
 // ** helper **
-// would like not to rely of Request
-export function paginationPageOffset(req: Request) {
-  const offset = parseInt(req.query.offset as string) ?? 0;
-  const limit = parseInt(req.query.limit as string) ?? 10;
-  const end = offset * limit;
+export function paginationPageOffset(offset: reqQuery, limit: reqQuery) {
+  const offset_ = parseInt(offset as string) ?? 0;
+  const limit_ = parseInt(limit as string) ?? 10;
+  const end = offset_ * limit_;
 
   return {
-    offset: offset,
-    limit: limit,
+    offset: offset_,
+    limit: limit_,
     end: end,
-    nextPage: `${req.baseUrl}/?offset=${end}&limit=${limit}`,
   };
 }
 

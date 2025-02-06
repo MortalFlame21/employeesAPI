@@ -98,7 +98,8 @@ const EmployeeController = {
 
   getEmployees: async (req: Request, res: Response) => {
     try {
-      const pgn = paginationPageOffset(req);
+      const pgn = paginationPageOffset(req.query.offset, req.query.limit);
+      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}`;
 
       const employees = await prisma.employee.findMany({
         skip: pgn.offset,
@@ -108,7 +109,7 @@ const EmployeeController = {
       res.json({
         offset: pgn.offset,
         limit: pgn.limit,
-        nextPage: pgn.nextPage,
+        nextPage: nextPage,
         results: jsonParseBigInt(employees),
       });
     } catch (e) {
@@ -117,26 +118,28 @@ const EmployeeController = {
   },
 
   findByTitle: async (req: Request, res: Response) => {
-    const employees = await prisma.title.findMany({
-      where: {
-        title: {
-          equals: req.params.title,
-          mode: "insensitive",
+    try {
+      const employees = await prisma.title.findMany({
+        where: {
+          title: {
+            equals: req.params.title,
+            mode: "insensitive",
+          },
         },
-      },
-      take: 10,
-      skip: 1,
-    });
-    const employees_ = await prisma.employee.findMany({
-      where: {
-        id: {
-          in: employees.map(({ employee_id }) => {
-            return employee_id;
-          }),
+        take: 10,
+        skip: 1,
+      });
+      const employees_ = await prisma.employee.findMany({
+        where: {
+          id: {
+            in: employees.map(({ employee_id }) => {
+              return employee_id;
+            }),
+          },
         },
-      },
-    });
-    res.send({ employees: jsonParseBigInt(employees_) });
+      });
+      res.send({ employees: jsonParseBigInt(employees_) });
+    } catch (e) {}
   },
 
   findBySalary: async (req: Request, res: Response) => {
