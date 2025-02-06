@@ -21,12 +21,19 @@ export const z_employeeSchema = z.object({
   first_name: z.string().min(1).trim(),
   last_name: z.string().min(1).trim(),
   gender: z.enum(["M", "F"]),
-  hire_date: z_date.max(new Date()),
+  hire_date: z_date,
 });
 
 export const z_salarySchema = z.object({
   employee_id: z.coerce.bigint().nonnegative(),
   amount: z.coerce.bigint(),
-  from_date: z.date(),
-  to_date: z.date(),
+  from_date: z_date,
+  to_date: z_date,
+});
+
+export const z_employeeDepartmentSchema = z.object({
+  employee_id: z.coerce.bigint().nonnegative(),
+  department_id: z.string().min(4).max(4),
+  from_date: z_date,
+  to_date: z_date,
 });
