@@ -51,3 +51,10 @@ export const z_departmentEmployeeSchema = z.object({
   from_date: z_date,
   to_date: z_date,
 });
+
+export const z_departmentManagerSchema = z.object({
+  employee_id: z.coerce.bigint().nonnegative(),
+  department_id: z.string().min(4).max(4).trim(),
+  from_date: z_date,
+  to_date: z_date,
+});
