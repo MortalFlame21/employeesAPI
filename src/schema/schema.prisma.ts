@@ -7,7 +7,7 @@ import { z } from "zod";
 const z_dateMessage = "Please enter a valid date! See: \
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format for more information" as const;
 
-const z_date = z.coerce.date({
+export const z_date = z.coerce.date({
   // https://github.com/colinhacks/zod/discussions/1851
   errorMap: ({ code }, { defaultError }) => {
     if (code == "invalid_date") return { message: z_dateMessage };
