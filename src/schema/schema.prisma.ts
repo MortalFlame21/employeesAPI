@@ -33,7 +33,14 @@ export const z_salarySchema = z.object({
 
 export const z_employeeDepartmentSchema = z.object({
   employee_id: z.coerce.bigint().nonnegative(),
-  department_id: z.string().min(4).max(4),
+  department_id: z.string().min(4).max(4).trim(),
+  from_date: z_date,
+  to_date: z_date,
+});
+
+export const z_titleSchema = z.object({
+  employee_id: z.coerce.bigint().nonnegative(),
+  title: z.string().min(1).max(50).trim(),
   from_date: z_date,
   to_date: z_date,
 });
