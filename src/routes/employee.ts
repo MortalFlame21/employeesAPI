@@ -8,6 +8,7 @@ import {
   z_employeeDepartmentSchema,
   z_employeeSchema,
   z_salarySchema,
+  z_titleSchema,
 } from "@/schema/schema.prisma.js";
 import { z_paginationPageOffset } from "@/utils/routes.js";
 import { z } from "zod";
@@ -108,8 +109,20 @@ router.post(
   EmployeeController.insertSalary
 );
 
-router.put("/title", validateRequest({}), EmployeeController.upsertTitle);
-router.post("/title", validateRequest({}), EmployeeController.insertTitle);
+router.put(
+  "/title",
+  validateRequest({
+    body: z_titleSchema,
+  }),
+  EmployeeController.upsertTitle
+);
+router.post(
+  "/title",
+  validateRequest({
+    body: z_titleSchema,
+  }),
+  EmployeeController.insertTitle
+);
 
 router.put(
   "/department",

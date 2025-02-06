@@ -315,56 +315,64 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
   },
 
   upsertTitle: async (req: Request, res: Response) => {
-    const { employee_id, title, from_date, to_date } = req.body;
+    try {
+      const { employee_id, title, from_date, to_date } = req.body;
 
-    const data = {
-      employee_id: parseInt(employee_id),
-      title: title,
-      from_date: new Date(from_date),
-      to_date: new Date(to_date),
-    };
-
-    const oldTitle = await prisma.title.findFirst({
-      where: { employee_id: data.employee_id },
-      orderBy: { from_date: "desc" },
-    });
-
-    if (!oldTitle)
-      throw `employee_id: ${data.employee_id} does
-    not exist in Title table. Nothing to update.`;
-
-    await prisma.title.update({
-      where: {
-        employee_id_title_from_date: {
-          title: oldTitle.title,
-          employee_id: data.employee_id,
-          from_date: oldTitle.from_date,
-        },
-      },
-      data: { to_date: data.from_date },
-    });
-
-    const newTitle = await prisma.title.create({ data: data });
-
-    res.json({
-      old_title: jsonParseBigInt(oldTitle),
-      new_title: jsonParseBigInt(newTitle),
-    });
-  },
-
-  insertTitle: async (req: Request, res: Response) => {
-    const { employee_id, title, from_date, to_date } = req.body;
-
-    const newTitle = await prisma.title.create({
-      data: {
+      const data = {
         employee_id: parseInt(employee_id),
         title: title,
         from_date: new Date(from_date),
         to_date: new Date(to_date),
-      },
-    });
+      };
 
-    res.json({ new_employee_title: jsonParseBigInt(newTitle) });
+      const oldTitle = await prisma.title.findFirst({
+        where: { employee_id: data.employee_id },
+        orderBy: { from_date: "desc" },
+      });
+
+      if (!oldTitle)
+        throw `employee_id: ${data.employee_id} does
+      not exist in Title table. Nothing to update.`;
+
+      await prisma.title.update({
+        where: {
+          employee_id_title_from_date: {
+            title: oldTitle.title,
+            employee_id: data.employee_id,
+            from_date: oldTitle.from_date,
+          },
+        },
+        data: { to_date: data.from_date },
+      });
+
+      const newTitle = await prisma.title.create({ data: data });
+
+      res.json({
+        old_title: jsonParseBigInt(oldTitle),
+        new_title: jsonParseBigInt(newTitle),
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
+  },
+
+  insertTitle: async (req: Request, res: Response) => {
+    try {
+      const { employee_id, title, from_date, to_date } = req.body;
+
+      const newTitle = await prisma.title.create({
+        data: {
+          employee_id: parseInt(employee_id),
+          title: title,
+          from_date: new Date(from_date),
+          to_date: new Date(to_date),
+        },
+      });
+
+      res.json({ new_employee_title: jsonParseBigInt(newTitle) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   upsertDepartment: async (req: Request, res: Response) => {
