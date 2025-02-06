@@ -49,11 +49,15 @@ const DepartmentController = {
   },
 
   deleteDepartment: async (req: Request, res: Response) => {
-    const department_id = req.params.department_id;
-    const deletedDepartment = await prisma.department.delete({
-      where: { id: department_id },
-    });
-    res.send({ deleted_department: deletedDepartment });
+    try {
+      const department_id = req.params.id;
+      const deletedDepartment = await prisma.department.delete({
+        where: { id: department_id },
+      });
+      res.send({ deleted_department: deletedDepartment });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 };
 

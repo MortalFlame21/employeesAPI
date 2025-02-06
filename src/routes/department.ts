@@ -25,8 +25,10 @@ router.put(
 // delete a department
 // do later: consequently updating all employees in that department
 router.delete(
-  "/:department_id",
-  validateRequest({}),
+  "/:id",
+  validateRequest({
+    params: z_department.pick({ id: true }),
+  }),
   DepartmentController.deleteDepartment
 );
 
