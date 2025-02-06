@@ -126,12 +126,16 @@ router.post(
 
 router.put(
   "/department",
-  validateRequest({}),
+  validateRequest({
+    body: z_employeeDepartmentSchema,
+  }),
   EmployeeController.upsertDepartment
 );
 router.post(
   "/department",
-  validateRequest({}),
+  validateRequest({
+    body: z_employeeDepartmentSchema,
+  }),
   EmployeeController.insertDepartment
 );
 

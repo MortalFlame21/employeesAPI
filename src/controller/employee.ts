@@ -376,57 +376,65 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
   },
 
   upsertDepartment: async (req: Request, res: Response) => {
-    const { employee_id, department_id, from_date, to_date } = req.body;
+    try {
+      const { employee_id, department_id, from_date, to_date } = req.body;
 
-    const data: department_employee = {
-      employee_id: BigInt(employee_id),
-      department_id: department_id,
-      from_date: new Date(from_date),
-      to_date: new Date(to_date),
-    };
-
-    const oldDepartment = await prisma.department_employee.findFirst({
-      where: { employee_id: data.employee_id },
-      orderBy: { from_date: "desc" },
-    });
-
-    if (!oldDepartment)
-      throw `employee_id: ${data.employee_id} does not exist
-    in Department table. Nothing to update.`;
-
-    await prisma.department_employee.update({
-      where: {
-        employee_id_department_id: {
-          employee_id: data.employee_id,
-          department_id: oldDepartment.department_id,
-        },
-      },
-      data: { to_date: data.from_date },
-    });
-
-    const newDepartment = await prisma.department_employee.create({
-      data: data,
-    });
-
-    res.json({
-      old_department: jsonParseBigInt(oldDepartment),
-      new_department: jsonParseBigInt(newDepartment),
-    });
-  },
-
-  insertDepartment: async (req: Request, res: Response) => {
-    const { employee_id, department_id, from_date, to_date } = req.body;
-
-    const newDepartment = await prisma.department_employee.create({
-      data: {
+      const data: department_employee = {
         employee_id: BigInt(employee_id),
         department_id: department_id,
         from_date: new Date(from_date),
         to_date: new Date(to_date),
-      },
-    });
+      };
 
-    res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
+      const oldDepartment = await prisma.department_employee.findFirst({
+        where: { employee_id: data.employee_id },
+        orderBy: { from_date: "desc" },
+      });
+
+      if (!oldDepartment)
+        throw `employee_id: ${data.employee_id} does not exist
+      in Department table. Nothing to update.`;
+
+      await prisma.department_employee.update({
+        where: {
+          employee_id_department_id: {
+            employee_id: data.employee_id,
+            department_id: oldDepartment.department_id,
+          },
+        },
+        data: { to_date: data.from_date },
+      });
+
+      const newDepartment = await prisma.department_employee.create({
+        data: data,
+      });
+
+      res.json({
+        old_department: jsonParseBigInt(oldDepartment),
+        new_department: jsonParseBigInt(newDepartment),
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
+  },
+
+  insertDepartment: async (req: Request, res: Response) => {
+    try {
+      const { employee_id, department_id, from_date, to_date } = req.body;
+
+      const newDepartment = await prisma.department_employee.create({
+        data: {
+          employee_id: BigInt(employee_id),
+          department_id: department_id,
+          from_date: new Date(from_date),
+          to_date: new Date(to_date),
+        },
+      });
+
+      res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 };
 
