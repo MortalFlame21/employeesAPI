@@ -58,3 +58,8 @@ export const z_departmentManagerSchema = z.object({
   from_date: z_date,
   to_date: z_date,
 });
+
+export const z_department = z.object({
+  id: z.string().min(4).max(4).trim(),
+  department_name: z.string().min(1).max(40).trim(),
+});

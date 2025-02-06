@@ -26,22 +26,26 @@ const DepartmentController = {
   },
 
   createDepartment: async (req: Request, res: Response) => {
-    const { department_name } = req.body;
+    try {
+      const { department_name } = req.body;
 
-    const latestDepartment = await prisma.department.findFirst({
-      orderBy: { id: "desc" },
-    });
+      const latestDepartment = await prisma.department.findFirst({
+        orderBy: { id: "desc" },
+      });
 
-    const idNum = parseInt(latestDepartment!.id.replace("d", "")) + 1;
+      const idNum = parseInt(latestDepartment!.id.replace("d", "")) + 1;
 
-    const newDepartment = await prisma.department.create({
-      data: {
-        id: `d${String(idNum).padStart(3, "0")}`,
-        dept_name: department_name,
-      },
-    });
+      const newDepartment = await prisma.department.create({
+        data: {
+          id: `d${String(idNum).padStart(3, "0")}`,
+          dept_name: department_name,
+        },
+      });
 
-    res.send({ new_department: newDepartment });
+      res.send({ new_department: newDepartment });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   deleteDepartment: async (req: Request, res: Response) => {
