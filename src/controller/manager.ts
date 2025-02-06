@@ -111,27 +111,29 @@ does not exist in Manager table. Nothing to update.`;
   },
 
   deleteManager: async (req: Request, res: Response) => {
-    const { employee_id } = req.params;
+    try {
+      const employee_id = BigInt(req.params.employee_id ?? "0");
 
-    const deletedManager = await prisma.department_manager.findFirst({
-      where: { employee_id: BigInt(employee_id ?? "0") },
-      orderBy: { from_date: "desc" },
-    });
+      const deletedManager = await prisma.department_manager.findFirst({
+        where: { employee_id: employee_id },
+        orderBy: { from_date: "desc" },
+      });
 
-    if (!deletedManager)
-      throw `employee_id: ${BigInt(
-        employee_id ?? "0"
-      )} does not exist in Manager table`;
+      if (!deletedManager)
+        throw `employee_id: ${employee_id} does not exist in Manager table`;
 
-    const deletedManager_ = await prisma.department_manager.delete({
-      where: {
-        employee_id_department_id: {
-          employee_id: BigInt(employee_id ?? "0"),
-          department_id: deletedManager.department_id,
+      const deletedManager_ = await prisma.department_manager.delete({
+        where: {
+          employee_id_department_id: {
+            employee_id: BigInt(employee_id ?? "0"),
+            department_id: deletedManager.department_id,
+          },
         },
-      },
-    });
-    res.json({ deleted_manager: jsonParseBigInt(deletedManager_) });
+      });
+      res.json({ deleted_manager: jsonParseBigInt(deletedManager_) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 };
 
