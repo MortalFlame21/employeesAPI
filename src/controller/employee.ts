@@ -67,24 +67,32 @@ const EmployeeController = {
   },
 
   deleteEmployee: async (req: Request, res: Response) => {
-    const employee = await prisma.employee.delete({
-      where: {
-        id: parseInt(req.body.id),
-      },
-    });
-    res.json({ deletedUser: jsonParseBigInt(employee) });
+    try {
+      const employee = await prisma.employee.delete({
+        where: {
+          id: parseInt(req.body.id),
+        },
+      });
+      res.json({ deletedUser: jsonParseBigInt(employee) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   findByFirstName: async (req: Request, res: Response) => {
-    const employee = await prisma.employee.findFirst({
-      where: {
-        first_name: {
-          equals: req.params.name,
-          mode: "insensitive",
+    try {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          first_name: {
+            equals: req.params.first_name,
+            mode: "insensitive",
+          },
         },
-      },
-    });
-    res.json(jsonParseBigInt(employee));
+      });
+      res.json(jsonParseBigInt(employee));
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   getEmployees: async (req: Request, res: Response) => {

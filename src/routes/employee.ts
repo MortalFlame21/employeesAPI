@@ -20,10 +20,18 @@ router.post(
   EmployeeController.createEmployee
 );
 // delete employee
-router.delete("/", EmployeeController.deleteEmployee);
+router.delete(
+  "/",
+  validateRequest({ body: z_employeeSchema.pick({ id: true }) }),
+  EmployeeController.deleteEmployee
+);
 
 // get employee by first name
-router.get("/firstName/:name", EmployeeController.findByFirstName);
+router.get(
+  "/firstName/:first_name",
+  validateRequest({ params: z_employeeSchema.pick({ first_name: true }) }),
+  EmployeeController.findByFirstName
+);
 
 // for below I would like to combine, the following 3 into a query
 // for the GET request
