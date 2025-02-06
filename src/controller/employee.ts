@@ -96,24 +96,28 @@ const EmployeeController = {
   },
 
   getEmployees: async (req: Request, res: Response) => {
-    let offset = parseInt(req.query.offset as string) || 1;
-    let limit = parseInt(req.query.limit as string) || 10;
-    if (limit > 100) limit = 100;
+    try {
+      let offset = parseInt(req.query.offset as string) ?? 0;
+      let limit = parseInt(req.query.limit as string) ?? 10;
+      if (limit > 100) limit = 100;
 
-    const end = offset * limit;
-    const nextPage = `${req.baseUrl}/?offset=${end}&limit=${limit}`;
+      const end = offset * limit;
+      const nextPage = `${req.baseUrl}/?offset=${end}&limit=${limit}`;
 
-    const employees = await prisma.employee.findMany({
-      skip: offset,
-      take: limit,
-    });
+      const employees = await prisma.employee.findMany({
+        skip: offset,
+        take: limit,
+      });
 
-    res.json({
-      offset: offset,
-      limit: limit,
-      nextPage: nextPage,
-      results: jsonParseBigInt(employees),
-    });
+      res.json({
+        offset: offset,
+        limit: limit,
+        nextPage: nextPage,
+        results: jsonParseBigInt(employees),
+      });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
   },
 
   findByTitle: async (req: Request, res: Response) => {

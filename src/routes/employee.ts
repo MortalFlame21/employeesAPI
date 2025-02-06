@@ -4,6 +4,7 @@ import EmployeeController from "@/controller/employee.js";
 import validateRequest from "@/middleware/validateRequest.js";
 
 import { z_employeeSchema } from "@/schema/schema.prisma.js";
+import { z_pageOffset } from "@/schema/routes.js";
 
 const router = express.Router();
 
@@ -36,7 +37,11 @@ router.get(
 // for below I would like to combine, the following 3 into a query
 // for the GET request
 // get all employees
-router.get("/", EmployeeController.getEmployees);
+router.get(
+  "/",
+  validateRequest({ query: z_pageOffset }),
+  EmployeeController.getEmployees
+);
 // get employees by title
 router.get("/title/:title", EmployeeController.findByTitle);
 // get employees by salary range
