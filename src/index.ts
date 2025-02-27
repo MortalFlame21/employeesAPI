@@ -1,34 +1,6 @@
-import express, {
-  type NextFunction,
-  type ErrorRequestHandler,
-  type Request,
-  type Response,
-} from "express";
-import routes from "./routes/routes.js";
-
-const app = express();
-
-app.use(express.json());
+import app from "@/app.js";
 
 const PORT = process.env.PORT || 5000;
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the EmployeesApi!");
-});
-
-app.use("/", routes);
-
-app.use(
-  (
-    err: ErrorRequestHandler,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    console.error(err);
-    res.status(500).send("Uh oh! An unexpected error occured. :(");
-  }
-);
 
 app.listen(PORT, () => {
   console.log(
