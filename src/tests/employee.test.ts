@@ -6,23 +6,28 @@ const req = supertest(app);
 
 describe("Employee Schema Test", () => {
   describe("GET", () => {
-    test.todo("employees", ({ expect }) => {});
+    test("employees", async () => {
+      await req
+        .get("/employee?limit=100&offset=10")
+        .expect("Content-Type", /json/)
+        .expect(200);
+    });
 
-    test.todo("employee by id", ({ expect }) => {});
+    test.todo("employee by id", () => {});
 
-    test.todo("employee by firstName", ({ expect }) => {});
+    test.todo("employee by firstName", () => {});
 
-    test.todo("employee salary by id", ({ expect }) => {});
+    test.todo("employee salary by id", () => {});
 
-    test.todo("employee title by id", ({ expect }) => {});
+    test.todo("employee title by id", () => {});
 
-    test.todo("employees with title", ({ expect }) => {});
+    test.todo("employees with title", () => {});
 
-    test.todo("employee within salary range", ({ expect }) => {});
+    test.todo("employee within salary range", () => {});
 
-    test.todo("employee within hire date", ({ expect }) => {});
+    test.todo("employee within hire date", () => {});
 
-    test.todo("employee by department", ({ expect }) => {});
+    test.todo("employee by department", () => {});
   });
 
   describe.todo("POST employee", () => {});
