@@ -1,21 +1,35 @@
-import { test, describe } from "vitest";
+import { test, describe, expect } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
 const req = supertest(app);
+const url = "/employee" as const;
 
-describe("Employee Schema Test", () => {
+describe(`${url}`, () => {
   describe("GET", () => {
-    test("employees", async () => {
-      await req
-        .get("/employee?limit=100&offset=10")
+    test("100 employees after the first 10", async () => {
+      const res = await req
+        .get(`${url}?limit=100&offset=10`)
         .expect("Content-Type", /json/)
         .expect(200);
+      expect(res.body.results).toHaveLength(100);
     });
 
-    test.todo("employee by id", () => {});
+    test("employee id 100", async () => {
+      const res = await req
+        .get(`${url}/100`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body).toBe(null);
+    });
 
-    test.todo("employee by firstName", () => {});
+    test("employee name JaqueS (existing)", async () => {
+      const res = await req
+        .get(`${url}/firstName/JaqueS`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.id).toBe("10152");
+    });
 
     test.todo("employee salary by id", () => {});
 
