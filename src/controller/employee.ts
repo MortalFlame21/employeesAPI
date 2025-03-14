@@ -19,7 +19,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employee));
     } catch (e) {
-      res.send(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -30,7 +30,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employeeSalary));
     } catch (e) {
-      res.send(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -41,7 +41,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employeeTitle));
     } catch (e) {
-      res.send(400).json(reportErrors(e));
+      res.status(400).json(reportErrors(e));
     }
   },
 
@@ -209,7 +209,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         skip: pgn.offset,
         distinct: ["id"],
       });
-      res.send({
+      res.json({
         offset: pgn.offset,
         limit: pgn.limit,
         employees: jsonParseBigInt(employees),
