@@ -41,7 +41,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employeeTitle));
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -63,7 +63,7 @@ const EmployeeController = {
 
       res.json({ new_employee: jsonParseBigInt(newEmployee) });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -76,7 +76,7 @@ const EmployeeController = {
       });
       res.json({ deletedUser: jsonParseBigInt(employee) });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -92,7 +92,7 @@ const EmployeeController = {
       });
       res.json(jsonParseBigInt(employee));
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -113,7 +113,7 @@ const EmployeeController = {
         results: jsonParseBigInt(employees),
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -148,7 +148,7 @@ const EmployeeController = {
         next_page: nextPage,
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -186,7 +186,7 @@ const EmployeeController = {
         next_page: nextPage,
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -216,7 +216,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         next_page: nextPage,
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -249,7 +249,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         next_page: nextPage,
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -291,7 +291,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         new_salary: jsonParseBigInt(newSalary),
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -310,7 +310,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
 
       res.json({ new_employee_salary: jsonParseBigInt(newEmployeeSalary) });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -352,7 +352,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         new_title: jsonParseBigInt(newTitle),
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -371,7 +371,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
 
       res.json({ new_employee_title: jsonParseBigInt(newTitle) });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -414,7 +414,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
         new_department: jsonParseBigInt(newDepartment),
       });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 
@@ -433,7 +433,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
 
       res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
     } catch (e) {
-      res.status(400).json(reportErrors(e));
+      res.sendStatus(400).json(reportErrors(e));
     }
   },
 };
