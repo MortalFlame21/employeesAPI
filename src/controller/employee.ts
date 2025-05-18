@@ -226,8 +226,7 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
       // https://www.prisma.io/blog/prisma-orm-now-lets-you-choose-the-best-join-strategy-preview
       const pgn = paginationPageOffset(req.query.offset, req.query.limit);
       const department_id = (req.query.department_id as string) ?? "";
-      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}&\
-  department_id=${department_id}`;
+      const nextPage = `${req.baseUrl}/?offset=${pgn.end}&limit=${pgn.limit}&department_id=${department_id}`;
       const employees = await prisma.department_employee.findMany({
         where: { department_id: department_id },
         take: pgn.limit,
