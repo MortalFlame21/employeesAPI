@@ -63,9 +63,23 @@ describe(`${url}`, () => {
       expect(res.body.employees).toHaveLength(5);
     });
 
-    test.todo("employee within hire date", () => {});
+    test("employees hired after 2015 (different formats of date)", async () => {
+      const res = await req
+        .get(
+          `${url}/hired?&limit=5&start_hire_date=01-01-2015&end_hire_date=9999-01-01`
+        )
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.employees).toHaveLength(5);
+    });
 
-    test.todo("employee by department", () => {});
+    test("employees by department that does not exist", async () => {
+      const res = await req
+        .get(`${url}/department?department_id=d123`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.employees).toHaveLength(0);
+    });
   });
 
   describe.todo("POST employee", () => {});
