@@ -13,17 +13,22 @@ that stores employee data. The API manages authentication and CRUD operations.
 
 ## Data
 
-Seeded data is provided. See `prisma/seed.ts` for example data. Alternatively, see `prisma/seed_tests.ts` for example data used for testing.
+Schema and API is based off of [NeonDB employees database](https://neon.tech/docs/import/import-sample-data#employees-database). Follow the guide to generate more data.
 
-Real data can be used through [NeonDB](https://neon.tech/docs/import/import-sample-data#employees-database).
+Seeded data is also provided. See `prisma/seed.ts` for example data. The data creates a new department called `_gaming` having 51 employees.
 
-To seed data `npm run prisma-seed`.
+Alternatively, see `prisma/seed_tests.ts` for example data which is used for testing. This data creates a new department called `_internship` having 50 employees.
+
+The seed data have been randomly generated from [Mockaroo](https://www.mockaroo.com/). With each `first_name` and `last_name` being prefixed with `_` to distinguish the seeded values.
+
+To seed data `npm run prisma-seed`, this seed uses `prisma/seed.ts`.
 
 ## Testing
 
-Tests have been created using [Vitest](https://vitest.dev/).
+Tests have been created using [Vitest](https://vitest.dev/). Tests are dependent on seeded data, `prisma/seed_test.ts`.
 
-Tests are dependent on seeded data, run `npm run prisma-seed-tests` to seed data for testing.
+1. Run `npm run prisma-seed-tests` to seed the data used for testing.
+2. `npm run test` to run tests.
 
 ## Whats next?
 
