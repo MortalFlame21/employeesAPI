@@ -1,0 +1,510 @@
+{
+  "department": {
+    "id": "d011",
+    "dept_name": "_internship"
+  },
+  "titles": ["Intern Manager", "Developer Intern"],
+  "default_title": "Unknown Intern",
+  "employees": [
+    {
+      "id": 500051,
+      "birth_date": "2003-11-30",
+      "first_name": "_Vasilis",
+      "last_name": "_Shovlin",
+      "gender": "M",
+      "hire_date": "2022-01-29",
+      "is_manager": false,
+      "salary": 78776
+    },
+    {
+      "id": 500052,
+      "birth_date": "1998-02-04",
+      "first_name": "_Miner",
+      "last_name": "_McAreavey",
+      "gender": "M",
+      "hire_date": "2023-07-11",
+      "is_manager": false,
+      "salary": 65581
+    },
+    {
+      "id": 500053,
+      "birth_date": "1996-02-09",
+      "first_name": "_Laverne",
+      "last_name": "_Sumner",
+      "gender": "F",
+      "hire_date": "2024-03-19",
+      "is_manager": false,
+      "salary": 73034
+    },
+    {
+      "id": 500054,
+      "birth_date": "2000-06-12",
+      "first_name": "_Wendeline",
+      "last_name": "_Growcock",
+      "gender": "F",
+      "hire_date": "2024-03-29",
+      "is_manager": false,
+      "salary": 76308
+    },
+    {
+      "id": 500055,
+      "birth_date": "2004-08-03",
+      "first_name": "_Alisun",
+      "last_name": "_Goricke",
+      "gender": "F",
+      "hire_date": "2025-06-09",
+      "is_manager": false,
+      "salary": 77539
+    },
+    {
+      "id": 500056,
+      "birth_date": "1998-10-19",
+      "first_name": "_Hamid",
+      "last_name": "_Jeaneau",
+      "gender": "M",
+      "hire_date": "2023-05-22",
+      "is_manager": false,
+      "salary": 67733
+    },
+    {
+      "id": 500057,
+      "birth_date": "1997-04-05",
+      "first_name": "_Nicolea",
+      "last_name": "_Pitrelli",
+      "gender": "F",
+      "hire_date": "2024-10-25",
+      "is_manager": false,
+      "salary": 78234
+    },
+    {
+      "id": 500058,
+      "birth_date": "1995-12-28",
+      "first_name": "_Stefa",
+      "last_name": "_Huygens",
+      "gender": "F",
+      "hire_date": "2024-12-29",
+      "is_manager": false,
+      "salary": 74430
+    },
+    {
+      "id": 500059,
+      "birth_date": "1997-09-01",
+      "first_name": "_Mozelle",
+      "last_name": "_Dorward",
+      "gender": "F",
+      "hire_date": "2023-02-06",
+      "is_manager": false,
+      "salary": 80960
+    },
+    {
+      "id": 500060,
+      "birth_date": "1999-02-15",
+      "first_name": "_Trey",
+      "last_name": "_Dearan",
+      "gender": "M",
+      "hire_date": "2025-05-28",
+      "is_manager": false,
+      "salary": 82075
+    },
+    {
+      "id": 500061,
+      "birth_date": "2004-08-14",
+      "first_name": "_Adaline",
+      "last_name": "_Meardon",
+      "gender": "F",
+      "hire_date": "2025-03-11",
+      "is_manager": false,
+      "salary": 80364
+    },
+    {
+      "id": 500062,
+      "birth_date": "1996-02-18",
+      "first_name": "_Niko",
+      "last_name": "_Currie",
+      "gender": "M",
+      "hire_date": "2025-07-08",
+      "is_manager": false,
+      "salary": 69467
+    },
+    {
+      "id": 500063,
+      "birth_date": "1999-09-14",
+      "first_name": "_Bert",
+      "last_name": "_Stainburn",
+      "gender": "M",
+      "hire_date": "2025-06-17",
+      "is_manager": false,
+      "salary": 79183
+    },
+    {
+      "id": 500064,
+      "birth_date": "2002-06-07",
+      "first_name": "_Perry",
+      "last_name": "_Ilett",
+      "gender": "F",
+      "hire_date": "2023-07-06",
+      "is_manager": false,
+      "salary": 65581
+    },
+    {
+      "id": 500065,
+      "birth_date": "2005-04-16",
+      "first_name": "_Pace",
+      "last_name": "_Hymer",
+      "gender": "M",
+      "hire_date": "2023-06-25",
+      "is_manager": false,
+      "salary": 82598
+    },
+    {
+      "id": 500066,
+      "birth_date": "2005-09-23",
+      "first_name": "_Joni",
+      "last_name": "_Roofe",
+      "gender": "F",
+      "hire_date": "2024-06-03",
+      "is_manager": false,
+      "salary": 68937
+    },
+    {
+      "id": 500067,
+      "birth_date": "1995-11-12",
+      "first_name": "_Austina",
+      "last_name": "_Needham",
+      "gender": "F",
+      "hire_date": "2022-01-18",
+      "is_manager": false,
+      "salary": 76512
+    },
+    {
+      "id": 500068,
+      "birth_date": "2003-10-23",
+      "first_name": "_Madelin",
+      "last_name": "_Thistleton",
+      "gender": "F",
+      "hire_date": "2023-10-10",
+      "is_manager": false,
+      "salary": 70358
+    },
+    {
+      "id": 500069,
+      "birth_date": "2001-10-29",
+      "first_name": "_Lanny",
+      "last_name": "_Rankling",
+      "gender": "F",
+      "hire_date": "2022-03-26",
+      "is_manager": false,
+      "salary": 82002
+    },
+    {
+      "id": 500070,
+      "birth_date": "1998-12-18",
+      "first_name": "_Dulciana",
+      "last_name": "_Grzeszczyk",
+      "gender": "F",
+      "hire_date": "2024-02-25",
+      "is_manager": false,
+      "salary": 78307
+    },
+    {
+      "id": 500071,
+      "birth_date": "2003-02-28",
+      "first_name": "_Nettie",
+      "last_name": "_Nutley",
+      "gender": "F",
+      "hire_date": "2022-12-13",
+      "is_manager": false,
+      "salary": 82113
+    },
+    {
+      "id": 500072,
+      "birth_date": "2005-08-30",
+      "first_name": "_Portie",
+      "last_name": "_Bichard",
+      "gender": "M",
+      "hire_date": "2022-10-06",
+      "is_manager": false,
+      "salary": 69826
+    },
+    {
+      "id": 500073,
+      "birth_date": "1996-08-10",
+      "first_name": "_Wally",
+      "last_name": "_Coates",
+      "gender": "M",
+      "hire_date": "2025-06-05",
+      "is_manager": false,
+      "salary": 84534
+    },
+    {
+      "id": 500074,
+      "birth_date": "2000-03-01",
+      "first_name": "_Steffane",
+      "last_name": "_Melley",
+      "gender": "F",
+      "hire_date": "2025-07-25",
+      "is_manager": false,
+      "salary": 74267
+    },
+    {
+      "id": 500075,
+      "birth_date": "2005-03-05",
+      "first_name": "_Ulrica",
+      "last_name": "_Giamelli",
+      "gender": "F",
+      "hire_date": "2023-02-12",
+      "is_manager": false,
+      "salary": 66886
+    },
+    {
+      "id": 500076,
+      "birth_date": "2001-04-08",
+      "first_name": "_Lonnie",
+      "last_name": "_Tilby",
+      "gender": "M",
+      "hire_date": "2024-06-03",
+      "is_manager": false,
+      "salary": 67962
+    },
+    {
+      "id": 500077,
+      "birth_date": "2003-05-25",
+      "first_name": "_Robinet",
+      "last_name": "_Sey",
+      "gender": "M",
+      "hire_date": "2025-03-25",
+      "is_manager": false,
+      "salary": 66545
+    },
+    {
+      "id": 500078,
+      "birth_date": "2000-02-19",
+      "first_name": "_Chevalier",
+      "last_name": "_Blades",
+      "gender": "M",
+      "hire_date": "2024-10-04",
+      "is_manager": false,
+      "salary": 68020
+    },
+    {
+      "id": 500079,
+      "birth_date": "2002-04-21",
+      "first_name": "_Hercules",
+      "last_name": "_Pinilla",
+      "gender": "M",
+      "hire_date": "2025-06-08",
+      "is_manager": false,
+      "salary": 76589
+    },
+    {
+      "id": 500080,
+      "birth_date": "2001-08-14",
+      "first_name": "_Claudine",
+      "last_name": "_Gribben",
+      "gender": "F",
+      "hire_date": "2025-10-22",
+      "is_manager": false,
+      "salary": 80885
+    },
+    {
+      "id": 500081,
+      "birth_date": "1996-11-09",
+      "first_name": "_Sanford",
+      "last_name": "_Blasik",
+      "gender": "M",
+      "hire_date": "2022-11-13",
+      "is_manager": false,
+      "salary": 83477
+    },
+    {
+      "id": 500082,
+      "birth_date": "2002-10-07",
+      "first_name": "_Onfroi",
+      "last_name": "_Gellibrand",
+      "gender": "M",
+      "hire_date": "2022-11-01",
+      "is_manager": false,
+      "salary": 71330
+    },
+    {
+      "id": 500083,
+      "birth_date": "1999-09-16",
+      "first_name": "_Livvie",
+      "last_name": "_McNess",
+      "gender": "F",
+      "hire_date": "2024-02-10",
+      "is_manager": false,
+      "salary": 66860
+    },
+    {
+      "id": 500084,
+      "birth_date": "2005-11-30",
+      "first_name": "_Sansone",
+      "last_name": "_Kopecka",
+      "gender": "M",
+      "hire_date": "2025-07-05",
+      "is_manager": false,
+      "salary": 82552
+    },
+    {
+      "id": 500085,
+      "birth_date": "1995-11-06",
+      "first_name": "_Bette-ann",
+      "last_name": "_Langland",
+      "gender": "F",
+      "hire_date": "2022-03-29",
+      "is_manager": false,
+      "salary": 71074
+    },
+    {
+      "id": 500086,
+      "birth_date": "2005-07-30",
+      "first_name": "_Tarrah",
+      "last_name": "_Littleover",
+      "gender": "F",
+      "hire_date": "2025-03-28",
+      "is_manager": false,
+      "salary": 67646
+    },
+    {
+      "id": 500087,
+      "birth_date": "2004-05-09",
+      "first_name": "_Keely",
+      "last_name": "_Mellings",
+      "gender": "F",
+      "hire_date": "2022-03-18",
+      "is_manager": false,
+      "salary": 77203
+    },
+    {
+      "id": 500088,
+      "birth_date": "2000-08-15",
+      "first_name": "_Abbott",
+      "last_name": "_Braunes",
+      "gender": "M",
+      "hire_date": "2025-03-10",
+      "is_manager": false,
+      "salary": 82851
+    },
+    {
+      "id": 500089,
+      "birth_date": "1995-05-16",
+      "first_name": "_Daryle",
+      "last_name": "_Swatradge",
+      "gender": "M",
+      "hire_date": "2024-05-13",
+      "is_manager": false,
+      "salary": 71736
+    },
+    {
+      "id": 500090,
+      "birth_date": "1997-07-08",
+      "first_name": "_Krisha",
+      "last_name": "_Sallan",
+      "gender": "M",
+      "hire_date": "2024-07-03",
+      "is_manager": false,
+      "salary": 71455
+    },
+    {
+      "id": 500091,
+      "birth_date": "1977-04-20",
+      "first_name": "_Mattie",
+      "last_name": "_Stebbings",
+      "gender": "M",
+      "hire_date": "2009-08-04",
+      "is_manager": true,
+      "salary": 125037
+    },
+    {
+      "id": 500092,
+      "birth_date": "1979-10-07",
+      "first_name": "_Graham",
+      "last_name": "_Waadenburg",
+      "gender": "M",
+      "hire_date": "2014-10-04",
+      "is_manager": true,
+      "salary": 116369
+    },
+    {
+      "id": 500093,
+      "birth_date": "1976-04-27",
+      "first_name": "_Jerrome",
+      "last_name": "_Helgass",
+      "gender": "M",
+      "hire_date": "2009-03-21",
+      "is_manager": true,
+      "salary": 127003
+    },
+    {
+      "id": 500094,
+      "birth_date": "1984-09-19",
+      "first_name": "_Parsifal",
+      "last_name": "_Abeles",
+      "gender": "M",
+      "hire_date": "2013-09-04",
+      "is_manager": true,
+      "salary": 141661
+    },
+    {
+      "id": 500095,
+      "birth_date": "1978-07-22",
+      "first_name": "_Cristine",
+      "last_name": "_Kincaid",
+      "gender": "F",
+      "hire_date": "2012-03-22",
+      "is_manager": true,
+      "salary": 128219
+    },
+    {
+      "id": 500096,
+      "birth_date": "1983-08-02",
+      "first_name": "_Jerrilee",
+      "last_name": "_Curtain",
+      "gender": "F",
+      "hire_date": "2009-12-08",
+      "is_manager": true,
+      "salary": 127848
+    },
+    {
+      "id": 500097,
+      "birth_date": "1983-12-14",
+      "first_name": "_Dalia",
+      "last_name": "_Tantum",
+      "gender": "F",
+      "hire_date": "2016-07-16",
+      "is_manager": true,
+      "salary": 137151
+    },
+    {
+      "id": 500098,
+      "birth_date": "1977-03-10",
+      "first_name": "_Tammie",
+      "last_name": "_Trinbey",
+      "gender": "M",
+      "hire_date": "2014-10-01",
+      "is_manager": true,
+      "salary": 126814
+    },
+    {
+      "id": 500099,
+      "birth_date": "1976-03-29",
+      "first_name": "_Robina",
+      "last_name": "_Baldock",
+      "gender": "F",
+      "hire_date": "2009-11-15",
+      "is_manager": true,
+      "salary": 136953
+    },
+    {
+      "id": 500100,
+      "birth_date": "1976-11-13",
+      "first_name": "_Bekki",
+      "last_name": "_Bratley",
+      "gender": "F",
+      "hire_date": "2009-09-03",
+      "is_manager": true,
+      "salary": 139717
+    }
+  ]
+}

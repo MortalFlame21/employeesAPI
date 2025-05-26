@@ -4,6 +4,7 @@
     "dept_name": "_Gaming"
   },
   "titles": ["Party Leader", "Senior Gamer"],
+  "default_title": "Unknown Gamer",
   "employees": [
     {
       "id": 500000,
