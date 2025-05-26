@@ -16,7 +16,7 @@ import {
   - might need to do add dependency between the async functions.
 */
 
-import data from "@/_prisma/data.json" assert { type: "json" };
+import data from "@/_prisma/data.json" with { type: "json" };
 
 const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"],
