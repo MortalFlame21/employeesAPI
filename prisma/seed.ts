@@ -1,3 +1,4 @@
+import process from "process";
 import {
   type department,
   type employee,
@@ -9,18 +10,25 @@ import {
   PrismaClient,
 } from "@prisma/client";
 
-/*
-  notes:
-  - idk why i need to use .then and then .catch on some, I am thinking for the ones
-    with that nested where clause.
-  - might need to do add dependency between the async functions.
-*/
-
-import data from "@/_prisma/data.json" with { type: "json" };
-
 const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"],
 });
+
+type JSON_employee = employee & {
+  is_manager: boolean;
+  salary: bigint;
+};
+type JSON = {
+  department: {
+    id: string;
+    dept_name: string;
+  };
+  titles: string[];
+  default_title: string;
+  employees: JSON_employee[];
+};
+
+let data: JSON;
 
 async function main() {
   await seedDepartments();
@@ -146,7 +154,7 @@ async function seedEmployeeTitle() {
         employee_id: BigInt(id),
         title:
           (is_manager ? data.titles.at(0) : data.titles.at(1)) ??
-          "Unknown gamer",
+          data.default_title,
         from_date: new Date(hire_date),
         to_date: new Date("9999-01-01"),
       };
@@ -214,7 +222,12 @@ async function seedEmployeeManager() {
 }
 
 try {
-  await main();
+  const file_name = process.argv.slice(2).at(0) || ("data.json" as const);
+  const { default: data_ } = await import(`@/_prisma/${file_name}`, {
+    assert: { type: "json" },
+  });
+  data = data_;
+  main();
 } catch (e) {
   console.error(e);
   process.exit(1);
