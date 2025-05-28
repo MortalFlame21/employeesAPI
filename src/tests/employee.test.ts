@@ -1,4 +1,4 @@
-import { test, describe, expect } from "vitest";
+import { test, describe, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
@@ -82,7 +82,49 @@ describe(`${url}`, () => {
     });
   });
 
-  describe.todo("POST employee", () => {});
+  describe("POST employee", () => {
+    const id = 600001;
+
+    beforeAll(async () => {
+      try {
+        await req.delete(`${url}`).send({ id: id });
+      } catch (e) {
+        console.log("POST employee: beforeAll: Error caught.");
+        console.log(e);
+      }
+    });
+
+    test(`Hire Jesse Pinkman as Developer Intern (id ${id})`, async () => {
+      const body = {
+        id: id,
+        birth_date: "1984-09-24",
+        first_name: "Jesse",
+        last_name: "Pinkman",
+        gender: "M",
+        hire_date: "2019-10-11",
+      };
+      const res = await req
+        .post(`${url}`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.new_employee.id).toEqual(id.toString());
+    });
+
+    test.todo("Add Walter White income to table (exists)", async () => {
+      const res = await req.post(`${url}/salary`).expect(400);
+    });
+
+    test.todo("Add employee title Walter White", async () => {
+      const res = await req.post(`${url}/title`).expect(200);
+    });
+
+    test.todo("Add Gus Fring to new department", async () => {
+      const res = await req.post(`${url}/department`).expect(200);
+    });
+  });
+
   describe.todo("PUT employee", () => {});
+
   describe.todo("DELETE employee", () => {});
 });
