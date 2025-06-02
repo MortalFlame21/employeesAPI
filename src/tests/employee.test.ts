@@ -2,6 +2,8 @@ import { test, describe, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
+import { jsonParseBigInt } from "@/utils/jsonUtils.js";
+
 const req = supertest(app);
 const url = "/employee" as const;
 
@@ -83,20 +85,32 @@ describe(`${url}`, () => {
   });
 
   describe("POST employee", () => {
-    const id = 600001;
+    const department = {
+      index: { id: 600001 },
+      salary: {
+        id: 500098,
+        from_date: "2016-10-01",
+      },
+      title: {},
+      department: {},
+    };
 
     beforeAll(async () => {
       try {
-        await req.delete(`${url}`).send({ id: id });
+        await req.delete(`${url}`).send({ id: department.index.id });
+        await req.delete(`${url}/salary`).send({
+          employee_id: department.salary.id,
+          from_date: department.salary.from_date,
+        });
       } catch (e) {
         console.log("POST employee: beforeAll: Error caught.");
         console.log(e);
       }
     });
 
-    test(`Hire Jesse Pinkman as Developer Intern (id ${id})`, async () => {
+    test(`Hire Jesse Pinkman as Developer Intern (id ${department.index.id})`, async () => {
       const body = {
-        id: id,
+        id: department.index.id,
         birth_date: "1984-09-24",
         first_name: "Jesse",
         last_name: "Pinkman",
@@ -108,15 +122,29 @@ describe(`${url}`, () => {
         .send(body)
         .expect("Content-Type", /json/)
         .expect(200);
-      expect(res.body.new_employee.id).toEqual(id.toString());
+      expect(res.body.new_employee.id).toEqual(department.index.id.toString());
     });
 
-    test.todo("Add Walter White income to table (exists)", async () => {
-      const res = await req.post(`${url}/salary`).expect(400);
+    test("Add existing employee salary table", async () => {
+      const new_salary = 130500;
+      const body = {
+        employee_id: BigInt(department.salary.id),
+        amount: new_salary,
+        from_date: department.salary.from_date,
+        to_date: "9999-01-01",
+      };
+      const res = await req
+        .post(`${url}/salary`)
+        .send(jsonParseBigInt(body))
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.new_employee_salary.amount).toEqual(
+        new_salary.toString()
+      );
     });
 
-    test.todo("Add employee title Walter White", async () => {
-      const res = await req.post(`${url}/title`).expect(200);
+    test.todo("Add employee title non-unique composite", async () => {
+      const res = await req.post(`${url}/title`).expect(400);
     });
 
     test.todo("Add Gus Fring to new department", async () => {
