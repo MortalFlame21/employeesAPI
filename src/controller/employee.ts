@@ -391,6 +391,24 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
     }
   },
 
+  deleteTitle: async (req: Request, res: Response) => {
+    try {
+      const { employee_id, title, from_date } = req.body;
+      const deleted_title = await prisma.title.delete({
+        where: {
+          employee_id_title_from_date: {
+            employee_id: BigInt(employee_id),
+            title: title,
+            from_date: new Date(from_date),
+          },
+        },
+      });
+      res.json({ deleted_title: jsonParseBigInt(deleted_title) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
+  },
+
   upsertDepartment: async (req: Request, res: Response) => {
     try {
       const { employee_id, department_id, from_date, to_date } = req.body;
@@ -448,6 +466,28 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
       });
 
       res.json({ new_employee_department: jsonParseBigInt(newDepartment) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
+  },
+
+  deleteEmployeeDepartment: async (req: Request, res: Response) => {
+    try {
+      const { employee_id, department_id } = req.body;
+      const deleted_employee_department =
+        await prisma.department_employee.delete({
+          where: {
+            employee_id_department_id: {
+              employee_id: employee_id,
+              department_id: department_id,
+            },
+          },
+        });
+      res.json({
+        deleted_employee_department: jsonParseBigInt(
+          deleted_employee_department
+        ),
+      });
     } catch (e) {
       res.status(400).json(reportErrors(e));
     }
