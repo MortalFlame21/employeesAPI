@@ -313,6 +313,23 @@ end_hire_date=${end_hire_date.toISOString().split("T")[0]}`;
     }
   },
 
+  deleteSalary: async (req: Request, res: Response) => {
+    try {
+      const { employee_id, from_date } = req.body;
+      const salary = await prisma.salary.delete({
+        where: {
+          employee_id_from_date: {
+            employee_id: BigInt(employee_id),
+            from_date: new Date(from_date),
+          },
+        },
+      });
+      res.json({ deleted_salary: jsonParseBigInt(salary) });
+    } catch (e) {
+      res.status(400).json(reportErrors(e));
+    }
+  },
+
   upsertTitle: async (req: Request, res: Response) => {
     try {
       const { employee_id, title, from_date, to_date } = req.body;
