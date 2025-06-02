@@ -108,6 +108,17 @@ router.post(
   }),
   EmployeeController.insertSalary
 );
+// delete salary from employee
+router.delete(
+  "/salary",
+  validateRequest({
+    body: z_salarySchema.pick({
+      employee_id: true,
+      from_date: true,
+    }),
+  }),
+  EmployeeController.deleteSalary
+);
 
 router.put(
   "/title",
@@ -123,6 +134,17 @@ router.post(
   }),
   EmployeeController.insertTitle
 );
+router.delete(
+  "/title",
+  validateRequest({
+    body: z_titleSchema.pick({
+      employee_id: true,
+      title: true,
+      from_date: true,
+    }),
+  }),
+  EmployeeController.deleteTitle
+);
 
 router.put(
   "/department",
@@ -137,6 +159,16 @@ router.post(
     body: z_employeeDepartmentSchema,
   }),
   EmployeeController.insertDepartment
+);
+router.delete(
+  "/department",
+  validateRequest({
+    body: z_employeeDepartmentSchema.pick({
+      employee_id: true,
+      department_id: true,
+    }),
+  }),
+  EmployeeController.deleteEmployeeDepartment
 );
 
 // would like the following 3 to conjoin into 1 route
