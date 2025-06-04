@@ -85,13 +85,12 @@ describe(`${url}`, () => {
   });
 
   describe("POST employee", () => {
-    const department = {
+    const send = {
       index: { id: 600001 },
       salary: {
         employee_id: 500098,
         from_date: "2016-10-01",
       },
-      title: {},
       department: {
         employee_id: 500073,
         department_id: "d010",
@@ -101,18 +100,18 @@ describe(`${url}`, () => {
     // clean up test data in tables, just in case tests were ran before.
     beforeAll(async () => {
       try {
-        await req.delete(`${url}`).send(department.index);
-        await req.delete(`${url}/salary`).send(department.salary);
-        await req.delete(`${url}/department`).send(department.department);
+        await req.delete(`${url}`).send(send.index);
+        await req.delete(`${url}/salary`).send(send.salary);
+        await req.delete(`${url}/department`).send(send.department);
       } catch (e) {
         console.log("POST employee: beforeAll: Error caught.");
         console.log(e);
       }
     });
 
-    test(`Hire Jesse Pinkman as Developer Intern (id ${department.index.id})`, async () => {
+    test(`Hire Jesse Pinkman as Developer Intern (id ${send.index.id})`, async () => {
       const body = {
-        id: department.index.id,
+        ...send.index,
         birth_date: "1984-09-24",
         first_name: "Jesse",
         last_name: "Pinkman",
@@ -124,15 +123,14 @@ describe(`${url}`, () => {
         .send(body)
         .expect("Content-Type", /json/)
         .expect(200);
-      expect(res.body.new_employee.id).toEqual(department.index.id.toString());
+      expect(res.body.new_employee.id).toEqual(send.index.id.toString());
     });
 
     test("Add existing employee salary table", async () => {
       const new_salary = 130500;
       const body = {
-        employee_id: BigInt(department.salary.employee_id),
+        ...send.salary,
         amount: new_salary,
-        from_date: department.salary.from_date,
         to_date: "9999-01-01",
       };
       const res = await req
@@ -158,8 +156,7 @@ describe(`${url}`, () => {
 
     test("Move Young Thug to _Gaming department", async () => {
       const body = {
-        employee_id: department.department.employee_id,
-        department_id: department.department.department_id,
+        ...send.department,
         from_date: "2025-09-10",
         to_date: "2030-01-01",
       };
