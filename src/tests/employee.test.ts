@@ -143,8 +143,15 @@ describe(`${url}`, () => {
       );
     });
 
-    test.todo("Add employee title non-unique composite", async () => {
-      const res = await req.post(`${url}/title`).expect(400);
+    test("Add employee title non-unique composite key", async () => {
+      const body = {
+        employee_id: 800083,
+        title: "Developer Intern",
+        from_date: "2024-02-10",
+        to_date: "2024-06-10",
+      };
+      const res = await req.post(`${url}/title`).send(body).expect(400);
+      expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
     });
 
     test.todo("Add Gus Fring to new department", async () => {
