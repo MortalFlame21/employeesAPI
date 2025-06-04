@@ -88,20 +88,22 @@ describe(`${url}`, () => {
     const department = {
       index: { id: 600001 },
       salary: {
-        id: 500098,
+        employee_id: 500098,
         from_date: "2016-10-01",
       },
       title: {},
-      department: {},
+      department: {
+        employee_id: 500073,
+        department_id: "d010",
+      },
     };
 
+    // clean up test data in tables, just in case tests were ran before.
     beforeAll(async () => {
       try {
-        await req.delete(`${url}`).send({ id: department.index.id });
-        await req.delete(`${url}/salary`).send({
-          employee_id: department.salary.id,
-          from_date: department.salary.from_date,
-        });
+        await req.delete(`${url}`).send(department.index);
+        await req.delete(`${url}/salary`).send(department.salary);
+        await req.delete(`${url}/department`).send(department.department);
       } catch (e) {
         console.log("POST employee: beforeAll: Error caught.");
         console.log(e);
@@ -128,7 +130,7 @@ describe(`${url}`, () => {
     test("Add existing employee salary table", async () => {
       const new_salary = 130500;
       const body = {
-        employee_id: BigInt(department.salary.id),
+        employee_id: BigInt(department.salary.employee_id),
         amount: new_salary,
         from_date: department.salary.from_date,
         to_date: "9999-01-01",
@@ -154,8 +156,18 @@ describe(`${url}`, () => {
       expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
     });
 
-    test.todo("Add Gus Fring to new department", async () => {
-      const res = await req.post(`${url}/department`).expect(200);
+    test("Move Young Thug to _Gaming department", async () => {
+      const body = {
+        employee_id: department.department.employee_id,
+        department_id: department.department.department_id,
+        from_date: "2025-09-10",
+        to_date: "2030-01-01",
+      };
+      const res = await req.post(`${url}/department`).send(body).expect(200);
+      console.log(res.body.new_employee_department);
+      expect(res.body.new_employee_department.employee_id).toEqual(
+        body.employee_id.toString()
+      );
     });
   });
 
