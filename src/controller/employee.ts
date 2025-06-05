@@ -74,7 +74,7 @@ const EmployeeController = {
           id: parseInt(req.body.id),
         },
       });
-      res.json({ deletedUser: jsonParseBigInt(employee) });
+      res.json({ deleted_employee: jsonParseBigInt(employee) });
     } catch (e) {
       res.status(400).json(reportErrors(e));
     }
