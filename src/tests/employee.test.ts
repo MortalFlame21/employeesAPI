@@ -93,7 +93,7 @@ describe(`${url}`, () => {
       },
       department: {
         employee_id: 500073,
-        department_id: "d010",
+        department_id: "d016",
       },
     };
 
@@ -154,15 +154,15 @@ describe(`${url}`, () => {
       expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
     });
 
-    test("Move Young Thug to _Gaming department", async () => {
+    test("From 2025-09-10 add Young Thug to _Swagonommetry department", async () => {
       const body = {
         ...send.department,
         from_date: "2025-09-10",
         to_date: "2030-01-01",
       };
       const res = await req.post(`${url}/department`).send(body).expect(200);
-      expect(res.body.new_employee_department.employee_id).toEqual(
-        body.employee_id.toString()
+      expect(res.body.new_employee_department.from_date).toEqual(
+        new Date(body.from_date).toISOString()
       );
     });
   });
@@ -179,14 +179,15 @@ describe(`${url}`, () => {
         from_date: "2024-04-01",
       },
       department: {
-        employee_id: 1,
+        employee_id: 500084,
+        department_id: "d019",
       },
     };
     beforeAll(async () => {
       try {
         await req.delete(`${url}/salary`).send(send.salary);
         await req.delete(`${url}/title`).send(send.title);
-        // await req.delete(`${url}/department`);
+        await req.delete(`${url}/department`).send(send.department);
       } catch (e) {
         console.log("PUT employee: beforeAll: Error caught.");
         console.log(e);
@@ -218,9 +219,17 @@ describe(`${url}`, () => {
       );
     });
 
-    test.todo("Move John Pork to ...", async () => {
-      const body = {};
+    test("Move John Pork to _Instagram Reels", async () => {
+      const body = {
+        ...send.department,
+        from_date: "2024-03-01",
+        to_date: "9999-01-01",
+      };
       const res = await req.put(`${url}/department`).send(body).expect(200);
+      expect(res.body.old_department).not.null;
+      expect(res.body.new_department.department_id).equals(
+        send.department.department_id
+      );
     });
   });
 
