@@ -84,7 +84,7 @@ describe(`${url}`, () => {
     });
   });
 
-  describe("POST employee", () => {
+  describe("POST", () => {
     const send = {
       index: { id: 600001 },
       salary: {
@@ -150,7 +150,11 @@ describe(`${url}`, () => {
         from_date: "2024-02-10",
         to_date: "2024-06-10",
       };
-      const res = await req.post(`${url}/title`).send(body).expect(400);
+      const res = await req
+        .post(`${url}/title`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(400);
       expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
     });
 
@@ -160,14 +164,18 @@ describe(`${url}`, () => {
         from_date: "2025-09-10",
         to_date: "2030-01-01",
       };
-      const res = await req.post(`${url}/department`).send(body).expect(200);
+      const res = await req
+        .post(`${url}/department`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
       expect(res.body.new_employee_department.from_date).toEqual(
         new Date(body.from_date).toISOString()
       );
     });
   });
 
-  describe("PUT employee", () => {
+  describe("PUT", () => {
     const send = {
       salary: {
         employee_id: 500051,
@@ -200,7 +208,11 @@ describe(`${url}`, () => {
         amount: 91500,
         to_date: "2025-01-01",
       };
-      const res = await req.put(`${url}/salary`).send(body).expect(200);
+      const res = await req
+        .put(`${url}/salary`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
       expect(res.body.old_salary).not.null;
       expect(res.body.new_salary.from_date).equals(
         new Date(body.from_date).toISOString()
@@ -212,7 +224,11 @@ describe(`${url}`, () => {
         ...send.title,
         to_date: "9999-01-01",
       };
-      const res = await req.put(`${url}/title`).send(body).expect(200);
+      const res = await req
+        .put(`${url}/title`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
       expect(res.body.old_title).not.null;
       expect(res.body.new_title.to_date).equals(
         new Date(body.to_date).toISOString()
@@ -225,7 +241,11 @@ describe(`${url}`, () => {
         from_date: "2024-03-01",
         to_date: "9999-01-01",
       };
-      const res = await req.put(`${url}/department`).send(body).expect(200);
+      const res = await req
+        .put(`${url}/department`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
       expect(res.body.old_department).not.null;
       expect(res.body.new_department.department_id).equals(
         send.department.department_id
@@ -233,5 +253,5 @@ describe(`${url}`, () => {
     });
   });
 
-  describe.todo("DELETE employee", () => {});
+  describe.todo("DELETE", () => {});
 });
