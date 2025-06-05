@@ -1,8 +1,30 @@
 {
-  "department": {
-    "id": "d010",
-    "dept_name": "_Gaming"
-  },
+  "departments": [
+    {
+      "id": "d010",
+      "dept_name": "_Gaming"
+    },
+    {
+      "id": "d011",
+      "dept_name": "_Hustling"
+    },
+    {
+      "id": "d012",
+      "dept_name": "_Dropshipping"
+    },
+    {
+      "id": "d013",
+      "dept_name": "_Vibe Development"
+    },
+    {
+      "id": "d014",
+      "dept_name": "_Trapping"
+    },
+    {
+      "id": "d015",
+      "dept_name": "_Meme Curation"
+    }
+  ],
   "titles": ["Party Leader", "Senior Gamer"],
   "default_title": "Unknown Gamer",
   "employees": [

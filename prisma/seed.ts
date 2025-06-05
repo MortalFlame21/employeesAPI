@@ -14,18 +14,23 @@ const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"],
 });
 
+type JSON_department = {
+  id: string;
+  dept_name: string;
+};
+
 type JSON_employee = employee & {
   is_manager: boolean;
   salary: bigint;
 };
+
+type NonEmptyArray<T> = [T, ...T[]];
+
 type JSON = {
-  department: {
-    id: string;
-    dept_name: string;
-  };
-  titles: string[];
+  departments: NonEmptyArray<JSON_department>;
+  titles: NonEmptyArray<string>;
   default_title: string;
-  employees: JSON_employee[];
+  employees: NonEmptyArray<JSON_employee>;
 };
 
 let data: JSON;
@@ -41,12 +46,15 @@ async function main() {
 }
 
 async function seedDepartments() {
-  const newDeptData: department = data.department;
-  await prisma.department.upsert({
-    where: { id: newDeptData.id },
-    update: newDeptData,
-    create: newDeptData,
-  });
+  Promise.all(
+    data.departments.map((dept) =>
+      prisma.department.upsert({
+        where: { id: dept.id },
+        update: dept,
+        create: dept,
+      })
+    )
+  );
 }
 
 async function seedEmployees() {
@@ -62,20 +70,10 @@ async function seedEmployees() {
       };
     }
   );
-
-  Promise.all(
-    newEmployeeData.map((data) =>
-      prisma.employee.upsert({
-        where: { id: data.id },
-        update: data,
-        create: data,
-      })
-    )
-  );
 }
 
 async function seedEmployeeDepartment() {
-  const newDepartment: department = data.department;
+  const newDepartment: department = data.departments[0];
   const newEmployees: department_employee[] = data.employees.map(
     ({ id, hire_date }) => {
       return {
@@ -186,7 +184,7 @@ async function seedEmployeeTitle() {
 }
 
 async function seedEmployeeManager() {
-  const newDepartment: department = data.department;
+  const newDepartment: department = data.departments[0];
   const newEmployeeManager: department_manager[] = data.employees
     .filter(({ is_manager }) => is_manager)
     .map(({ id, hire_date }) => {

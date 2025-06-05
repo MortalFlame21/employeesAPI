@@ -1,8 +1,30 @@
 {
-  "department": {
-    "id": "d011",
-    "dept_name": "_internship"
-  },
+  "departments": [
+    {
+      "id": "d015",
+      "dept_name": "_Internship"
+    },
+    {
+      "id": "d016",
+      "dept_name": "_Swagonometry"
+    },
+    {
+      "id": "d017",
+      "dept_name": "_OS Development"
+    },
+    {
+      "id": "d018",
+      "dept_name": "_Procrastination"
+    },
+    {
+      "id": "d019",
+      "dept_name": "_Instagram Reels"
+    },
+    {
+      "id": "d020",
+      "dept_name": "_Flexing"
+    }
+  ],
   "titles": ["Intern Manager", "Developer Intern"],
   "default_title": "Unknown Intern",
   "employees": [
