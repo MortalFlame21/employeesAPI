@@ -161,14 +161,68 @@ describe(`${url}`, () => {
         to_date: "2030-01-01",
       };
       const res = await req.post(`${url}/department`).send(body).expect(200);
-      console.log(res.body.new_employee_department);
       expect(res.body.new_employee_department.employee_id).toEqual(
         body.employee_id.toString()
       );
     });
   });
 
-  describe.todo("PUT employee", () => {});
+  describe("PUT employee", () => {
+    const send = {
+      salary: {
+        employee_id: 500051,
+        from_date: "2023-01-01",
+      },
+      title: {
+        employee_id: 500072,
+        title: "Senior Code Dealer",
+        from_date: "2024-04-01",
+      },
+      department: {
+        employee_id: 1,
+      },
+    };
+    beforeAll(async () => {
+      try {
+        await req.delete(`${url}/salary`).send(send.salary);
+        await req.delete(`${url}/title`).send(send.title);
+        // await req.delete(`${url}/department`);
+      } catch (e) {
+        console.log("PUT employee: beforeAll: Error caught.");
+        console.log(e);
+      }
+    });
+
+    test("Update new employee salary", async () => {
+      const body = {
+        ...send.salary,
+        amount: 91500,
+        to_date: "2025-01-01",
+      };
+      const res = await req.put(`${url}/salary`).send(body).expect(200);
+      expect(res.body.old_salary).not.null;
+      expect(res.body.new_salary.from_date).equals(
+        new Date(body.from_date).toISOString()
+      );
+    });
+
+    test("Update employee of non existing title", async () => {
+      const body = {
+        ...send.title,
+        to_date: "9999-01-01",
+      };
+      const res = await req.put(`${url}/title`).send(body).expect(200);
+      expect(res.body.old_title).not.null;
+      expect(res.body.new_title.to_date).equals(
+        new Date(body.to_date).toISOString()
+      );
+    });
+
+    test.todo("Move John Pork to ...", async () => {
+      const body = {};
+      const res = await req.put(`${url}/department`).send(body).expect(200);
+    });
+  });
 
   describe.todo("DELETE employee", () => {});
 });
