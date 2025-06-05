@@ -1,8 +1,9 @@
-import { test, describe, expect, beforeAll } from "vitest";
+import { test, describe, expect, beforeAll, afterAll } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
 import { jsonParseBigInt } from "@/utils/jsonUtils.js";
+import { title } from "process";
 
 const req = supertest(app);
 const url = "/employee" as const;
@@ -253,5 +254,83 @@ describe(`${url}`, () => {
     });
   });
 
-  describe.todo("DELETE", () => {});
+  describe("DELETE", async () => {
+    // hard coded value from data_test.json
+    // essentially can work for any employee
+    const employee = {
+      data: {
+        id: 500052,
+        birth_date: "1998-02-04",
+        first_name: "_Quandale",
+        last_name: "_Dingle",
+        gender: "M",
+        hire_date: "2023-07-11",
+      },
+      amount: 65581,
+      department_id: "d015",
+      title: "Developer Intern",
+    };
+
+    const send = {
+      salary: {
+        employee_id: 500077,
+        from_date: "2025-03-25",
+      },
+      title: {
+        employee_id: 500069,
+        from_date: "2025-03-25",
+        title: "Developer Intern",
+      },
+      department: {
+        employee: 500050,
+        from_date: "2022-01-29",
+        department_id: "d_50",
+      },
+    };
+
+    afterAll(async () => {
+      try {
+        const send_common = {
+          employee_id: employee.data.id,
+          from_date: employee.data.hire_date,
+          to_date: "9999-01-01",
+        };
+        // undo removal of employee and the data
+        await req.post(`${url}`).send(employee.data);
+        await req.post(`${url}/salary`).send({
+          ...send_common,
+          amount: employee.amount,
+        });
+        await req.post(`${url}/title`).send({
+          ...send_common,
+          title: employee.title,
+        });
+        await req.post(`${url}/department`).send({
+          ...send_common,
+          department_id: employee.department_id,
+        });
+      } catch (e) {
+        console.log("DELETE employee: afterAll: Error caught.");
+        console.log(e);
+      }
+    });
+
+    test("Delete _Quandale _Dingle", async () => {
+      const res = await req
+        .delete(`${url}`)
+        .send({ id: employee.data.id })
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.deleted_employee.id).equal(employee.data.id.toString());
+    });
+
+    test.todo("Delete Kanye West's Salary", async () => {});
+
+    test.todo("Delete Employee title wrong date", async () => {});
+
+    test.todo(
+      "Delete _FreakBob _Squarepants from not exist department id d_50 (Krusty Krab)",
+      async () => {}
+    );
+  });
 });
