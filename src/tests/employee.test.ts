@@ -172,19 +172,24 @@ describe(`${url}`, () => {
     const send = {
       salary: {
         employee_id: 500051,
+        amount: 91500,
         from_date: "2023-01-01",
+        to_date: "2025-01-01",
       },
       title: {
         employee_id: 500072,
         title: "Senior Code Dealer",
         from_date: "2024-04-01",
+        to_date: "9999-01-01",
       },
       department: {
         employee_id: 500084,
         department_id: "d019",
+        from_date: "2024-03-01",
+        to_date: "9999-01-01",
       },
     };
-    beforeAll(async () => {
+    afterAll(async () => {
       try {
         await req.delete(`${url}/salary`).send(send.salary);
         await req.delete(`${url}/title`).send(send.title);
@@ -196,47 +201,33 @@ describe(`${url}`, () => {
     });
 
     test("Update new employee salary", async () => {
-      const body = {
-        ...send.salary,
-        amount: 91500,
-        to_date: "2025-01-01",
-      };
       const res = await req
         .put(`${url}/salary`)
-        .send(body)
+        .send(send.salary)
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.old_salary).not.null;
       expect(res.body.new_salary.from_date).equals(
-        new Date(body.from_date).toISOString()
+        new Date(send.salary.from_date).toISOString()
       );
     });
 
     test("Update employee of non existing title", async () => {
-      const body = {
-        ...send.title,
-        to_date: "9999-01-01",
-      };
       const res = await req
         .put(`${url}/title`)
-        .send(body)
+        .send(send.title)
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.old_title).not.null;
       expect(res.body.new_title.to_date).equals(
-        new Date(body.to_date).toISOString()
+        new Date(send.title.to_date).toISOString()
       );
     });
 
     test("Move John Pork to _Instagram Reels", async () => {
-      const body = {
-        ...send.department,
-        from_date: "2024-03-01",
-        to_date: "9999-01-01",
-      };
       const res = await req
         .put(`${url}/department`)
-        .send(body)
+        .send(send.department)
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.old_department).not.null;
