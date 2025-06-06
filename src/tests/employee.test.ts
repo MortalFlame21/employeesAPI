@@ -258,14 +258,12 @@ describe(`${url}`, () => {
     // hard coded value from data_test.json
     // essentially can work for any employee
     const employee = {
-      data: {
-        id: 500052,
-        birth_date: "1998-02-04",
-        first_name: "_Quandale",
-        last_name: "_Dingle",
-        gender: "M",
-        hire_date: "2023-07-11",
-      },
+      id: 500052,
+      birth_date: "1998-02-04",
+      first_name: "_Quandale",
+      last_name: "_Dingle",
+      gender: "M",
+      hire_date: "2023-07-11",
       amount: 65581,
       department_id: "d015",
       title: "Developer Intern",
@@ -274,16 +272,17 @@ describe(`${url}`, () => {
     const send = {
       salary: {
         employee_id: 500077,
+        amount: 50000,
         from_date: "2025-03-25",
+        to_date: "9999-01-01",
       },
       title: {
         employee_id: 500069,
-        from_date: "2025-03-25",
         title: "Developer Intern",
+        from_date: "2025-03-25",
       },
       department: {
-        employee: 500050,
-        from_date: "2022-01-29",
+        employee_id: 500050,
         department_id: "d_50",
       },
     };
@@ -291,12 +290,13 @@ describe(`${url}`, () => {
     afterAll(async () => {
       try {
         const send_common = {
-          employee_id: employee.data.id,
-          from_date: employee.data.hire_date,
+          employee_id: employee.id,
+          from_date: employee.hire_date,
           to_date: "9999-01-01",
         };
         // undo removal of employee and the data
-        await req.post(`${url}`).send(employee.data);
+        await req.post(`${url}`).send(employee);
+        // need to fix, can be more cleaner tbh
         await req.post(`${url}/salary`).send({
           ...send_common,
           amount: employee.amount,
@@ -309,6 +309,8 @@ describe(`${url}`, () => {
           ...send_common,
           department_id: employee.department_id,
         });
+
+        await req.post(`${url}/salary`).send(send.salary);
       } catch (e) {
         console.log("DELETE employee: afterAll: Error caught.");
         console.log(e);
@@ -318,19 +320,39 @@ describe(`${url}`, () => {
     test("Delete _Quandale _Dingle", async () => {
       const res = await req
         .delete(`${url}`)
-        .send({ id: employee.data.id })
+        .send({ id: employee.id })
         .expect("Content-Type", /json/)
         .expect(200);
-      expect(res.body.deleted_employee.id).equal(employee.data.id.toString());
+      expect(res.body.deleted_employee.id).equal(employee.id.toString());
     });
 
-    test.todo("Delete Kanye West's Salary", async () => {});
+    test("Delete Kanye West's Salary", async () => {
+      const res = await req
+        .delete(`${url}/salary`)
+        .send(send.salary)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.deleted_salary.amount).equal(
+        send.salary.amount.toString()
+      );
+    });
 
-    test.todo("Delete Employee title wrong date", async () => {});
+    test("Delete Employee title wrong date", async () => {
+      const res = await req
+        .delete(`${url}/title`)
+        .send(send.title)
+        .expect("Content-Type", /json/)
+        .expect(400);
+      expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
+    });
 
-    test.todo(
-      "Delete _FreakBob _Squarepants from not exist department id d_50 (Krusty Krab)",
-      async () => {}
-    );
+    test("Delete _FreakBob _Squarepants from not exist department id d_50 (Krusty Krab)", async () => {
+      const res = await req
+        .delete(`${url}/department`)
+        .send(send.department)
+        .expect("Content-Type", /json/)
+        .expect(400);
+      expect(res.body.error_type).toContain("PrismaClientKnownRequestError");
+    });
   });
 });
