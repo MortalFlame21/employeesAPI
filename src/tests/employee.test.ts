@@ -87,21 +87,32 @@ describe(`${url}`, () => {
 
   describe("POST", () => {
     const send = {
-      index: { id: 600001 },
+      employee: {
+        birth_date: "1984-09-24",
+        first_name: "Jesse",
+        last_name: "Pinkman",
+        gender: "M",
+        hire_date: "2019-10-11",
+        id: 600001,
+      },
       salary: {
         employee_id: 500098,
+        amount: 135000,
         from_date: "2016-10-01",
+        to_date: "9999-01-01",
       },
       department: {
         employee_id: 500073,
         department_id: "d016",
+        from_date: "2025-09-10",
+        to_date: "2030-01-01",
       },
     };
 
     // clean up test data in tables, just in case tests were ran before.
     beforeAll(async () => {
       try {
-        await req.delete(`${url}`).send(send.index);
+        await req.delete(`${url}`).send(send.employee);
         await req.delete(`${url}/salary`).send(send.salary);
         await req.delete(`${url}/department`).send(send.department);
       } catch (e) {
@@ -110,37 +121,23 @@ describe(`${url}`, () => {
       }
     });
 
-    test(`Hire Jesse Pinkman as Developer Intern (id ${send.index.id})`, async () => {
-      const body = {
-        ...send.index,
-        birth_date: "1984-09-24",
-        first_name: "Jesse",
-        last_name: "Pinkman",
-        gender: "M",
-        hire_date: "2019-10-11",
-      };
+    test(`Hire Jesse Pinkman as Developer Intern`, async () => {
       const res = await req
         .post(`${url}`)
-        .send(body)
+        .send(send.employee)
         .expect("Content-Type", /json/)
         .expect(200);
-      expect(res.body.new_employee.id).toEqual(send.index.id.toString());
+      expect(res.body.new_employee.id).toEqual(send.employee.id.toString());
     });
 
     test("Add existing employee salary table", async () => {
-      const new_salary = 130500;
-      const body = {
-        ...send.salary,
-        amount: new_salary,
-        to_date: "9999-01-01",
-      };
       const res = await req
         .post(`${url}/salary`)
-        .send(jsonParseBigInt(body))
+        .send(jsonParseBigInt(send.salary))
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.new_employee_salary.amount).toEqual(
-        new_salary.toString()
+        send.salary.amount.toString()
       );
     });
 
@@ -160,18 +157,13 @@ describe(`${url}`, () => {
     });
 
     test("From 2025-09-10 add Young Thug to _Swagonommetry department", async () => {
-      const body = {
-        ...send.department,
-        from_date: "2025-09-10",
-        to_date: "2030-01-01",
-      };
       const res = await req
         .post(`${url}/department`)
-        .send(body)
+        .send(send.department)
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.new_employee_department.from_date).toEqual(
-        new Date(body.from_date).toISOString()
+        new Date(send.department.from_date).toISOString()
       );
     });
   });
