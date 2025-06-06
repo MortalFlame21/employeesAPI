@@ -1,9 +1,8 @@
-import { test, describe, expect, beforeAll, afterAll } from "vitest";
+import { test, describe, expect, afterAll } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
 import { jsonParseBigInt } from "@/utils/jsonUtils.js";
-import { title } from "process";
 
 const req = supertest(app);
 const url = "/employee" as const;
@@ -238,21 +237,18 @@ describe(`${url}`, () => {
   });
 
   describe("DELETE", async () => {
-    // hard coded value from data_test.json
-    // essentially can work for any employee
-    const employee = {
-      id: 500052,
-      birth_date: "1998-02-04",
-      first_name: "_Quandale",
-      last_name: "_Dingle",
-      gender: "M",
-      hire_date: "2023-07-11",
-      amount: 65581,
-      department_id: "d015",
-      title: "Developer Intern",
-    };
-
     const send = {
+      employee: {
+        id: 500052,
+        birth_date: "1998-02-04",
+        first_name: "_Quandale",
+        last_name: "_Dingle",
+        gender: "M",
+        hire_date: "2023-07-11",
+        amount: 65581,
+        department_id: "d015",
+        title: "Developer Intern",
+      },
       salary: {
         employee_id: 500077,
         amount: 66545,
@@ -273,24 +269,24 @@ describe(`${url}`, () => {
     afterAll(async () => {
       try {
         const send_common = {
-          employee_id: employee.id,
-          from_date: employee.hire_date,
+          employee_id: send.employee.id,
+          from_date: send.employee.hire_date,
           to_date: "9999-01-01",
         };
         // undo removal of employee and the data
-        await req.post(`${url}`).send(employee);
+        await req.post(`${url}`).send(send.employee);
         // need to fix, can be more cleaner tbh
         await req.post(`${url}/salary`).send({
           ...send_common,
-          amount: employee.amount,
+          amount: send.employee.amount,
         });
         await req.post(`${url}/title`).send({
           ...send_common,
-          title: employee.title,
+          title: send.employee.title,
         });
         await req.post(`${url}/department`).send({
           ...send_common,
-          department_id: employee.department_id,
+          department_id: send.employee.department_id,
         });
 
         await req.post(`${url}/salary`).send(send.salary);
@@ -303,10 +299,10 @@ describe(`${url}`, () => {
     test("Delete _Quandale _Dingle", async () => {
       const res = await req
         .delete(`${url}`)
-        .send({ id: employee.id })
+        .send({ id: send.employee.id })
         .expect("Content-Type", /json/)
         .expect(200);
-      expect(res.body.deleted_employee.id).equal(employee.id.toString());
+      expect(res.body.deleted_employee.id).equal(send.employee.id.toString());
     });
 
     test("Delete Kanye West's Salary", async () => {
