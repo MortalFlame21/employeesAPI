@@ -110,7 +110,7 @@ describe(`${url}`, () => {
     };
 
     // clean up test data in tables, just in case tests were ran before.
-    beforeAll(async () => {
+    afterAll(async () => {
       try {
         await req.delete(`${url}`).send(send.employee);
         await req.delete(`${url}/salary`).send(send.salary);
@@ -264,7 +264,7 @@ describe(`${url}`, () => {
     const send = {
       salary: {
         employee_id: 500077,
-        amount: 50000,
+        amount: 66545,
         from_date: "2025-03-25",
         to_date: "9999-01-01",
       },
