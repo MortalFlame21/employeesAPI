@@ -70,6 +70,16 @@ async function seedEmployees() {
       };
     }
   );
+
+  Promise.all(
+    newEmployeeData.map((data) =>
+      prisma.employee.upsert({
+        where: { id: data.id },
+        update: data,
+        create: data,
+      })
+    )
+  );
 }
 
 async function seedEmployeeDepartment() {
