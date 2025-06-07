@@ -36,9 +36,7 @@ describe("Manager", () => {
 
     afterAll(async () => {
       try {
-        await req
-          .delete(`${url}`)
-          .send({ ...bodies[0], department_id: "d015" });
+        await req.delete(`${url}`).send(bodies[0]);
         await req.delete(`${url}`).send(bodies[1]);
       } catch (e) {
         console.log("POST employee: afterAll: Error caught.");
@@ -46,35 +44,71 @@ describe("Manager", () => {
       }
     });
 
-    test("Change manager to _department", async () => {
+    test("Add manager to another department", async () => {
       const res = await req
         .post(`${url}`)
         .send(bodies[0])
         .expect("Content-type", /json/)
         .expect(200);
-      expect(res.body.old_manager).not.null;
       expect(res.body.new_manager.employee_id).equal(
         bodies[0].employee_id.toString()
       );
     });
 
-    test("Change non-manager _Daquavious Pork to _Instagram Reels", async () => {
+    test("Add non-manager _Daquavious Pork to _Instagram Reels", async () => {
       const res = await req
         .post(`${url}`)
         .send(bodies[1])
         .expect("Content-type", /json/)
-        .expect(400);
-      console.log(res.body);
-      // UnknownError atm because I don't utilise AggreggateError
-      expect(res.body.error_type).toContain("UnknownError");
+        .expect(200);
+      expect(res.body.new_manager.employee_id).equal(
+        bodies[1].employee_id.toString()
+      );
     });
   });
 
-  describe.todo("PUT", () => {
-    afterAll(() => {
-      // delete
+  describe("PUT", () => {
+    const bodies = [
+      {
+        employee_id: 500091,
+        department_id: "d019",
+        from_date: "2030-07-03",
+        to_date: "9999-01-01",
+      },
+      {
+        employee_id: 500055,
+        department_id: "d016",
+        from_date: "2025-06-09",
+        to_date: "9999-01-01",
+      },
+    ] as const;
+
+    afterAll(async () => {
+      await req.delete(`${url}`).send(bodies[0]);
+      await req.delete(`${url}`).send(bodies[1]);
     });
-    test.todo("Add new manager to _department", async () => {});
+
+    test("Change manager to _Procrastination", async () => {
+      const res = await req
+        .put(`${url}`)
+        .send(bodies[0])
+        .expect("Content-type", /json/)
+        .expect(200);
+      expect(res.body.old_manager).not.null;
+      expect(res.body.new_manager.to_date).equal(
+        new Date(bodies[1].to_date).toISOString()
+      );
+    });
+
+    test("Add non-manager _Pinkpantheress to _Swagonometry", async () => {
+      const res = await req
+        .put(`${url}`)
+        .send(bodies[1])
+        .expect("Content-type", /json/)
+        .expect(400);
+      // UnknownError atm because I don't utilise AggregateError
+      expect(res.body.error_type).toContain("UnknownError");
+    });
   });
 
   describe.todo("DELETE", () => {
