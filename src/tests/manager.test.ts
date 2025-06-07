@@ -2,8 +2,6 @@ import { afterAll, describe, expect, test } from "vitest";
 import supertest from "supertest";
 import app from "@/app.js";
 
-import { jsonParseBigInt } from "@/utils/jsonUtils.js";
-
 const req = supertest(app);
 const url = "/manager" as const;
 
@@ -12,7 +10,7 @@ describe("Manager", () => {
     test("Get 5 managers", async () => {
       const res = await req
         .get(`${url}?limit=5`)
-        .expect("Content-type", /json/)
+        .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.results).length.greaterThanOrEqual(5);
     });
@@ -48,7 +46,7 @@ describe("Manager", () => {
       const res = await req
         .post(`${url}`)
         .send(bodies[0])
-        .expect("Content-type", /json/)
+        .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.new_manager.employee_id).equal(
         bodies[0].employee_id.toString()
@@ -59,7 +57,7 @@ describe("Manager", () => {
       const res = await req
         .post(`${url}`)
         .send(bodies[1])
-        .expect("Content-type", /json/)
+        .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.new_manager.employee_id).equal(
         bodies[1].employee_id.toString()
@@ -92,7 +90,7 @@ describe("Manager", () => {
       const res = await req
         .put(`${url}`)
         .send(bodies[0])
-        .expect("Content-type", /json/)
+        .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.old_manager).not.null;
       expect(res.body.new_manager.to_date).equal(
@@ -104,18 +102,40 @@ describe("Manager", () => {
       const res = await req
         .put(`${url}`)
         .send(bodies[1])
-        .expect("Content-type", /json/)
+        .expect("Content-Type", /json/)
         .expect(400);
       // UnknownError atm because I don't utilise AggregateError
       expect(res.body.error_type).toContain("UnknownError");
     });
   });
 
-  describe.todo("DELETE", () => {
-    afterAll(() => {
-      // put
+  describe("DELETE", () => {
+    const body = {
+      employee_id: 500092,
+      department_id: "d015",
+      from_date: "2014-10-04",
+      to_date: "9999-01-01",
+    };
+
+    afterAll(async () => {
+      try {
+        await req.post(`${url}`).send(body);
+      } catch (e) {
+        console.error("DELETE department_employee: afterAll: Error caught.");
+        console.error(e);
+      }
     });
 
-    test.todo("Delete manager from _department", async () => {});
+    test("Delete manager from _Internship", async () => {
+      const res = await req
+        .delete(`${url}`)
+        .send(body)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.deleted_manager.employee_id).equal(
+        body.employee_id.toString()
+      );
+      expect(res.body.deleted_manager.department_id).equal(body.department_id);
+    });
   });
 });
