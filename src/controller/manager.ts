@@ -80,7 +80,6 @@ const ManagerController = {
         },
       });
 
-      console.log("here");
       res.json({
         new_manager: jsonParseBigInt(newManager),
       });
@@ -91,25 +90,15 @@ const ManagerController = {
 
   deleteManager: async (req: Request, res: Response) => {
     try {
-      const employee_id = BigInt(req.params.employee_id ?? "0");
-
-      const deletedManager = await prisma.department_manager.findFirst({
-        where: { employee_id: employee_id },
-        orderBy: { from_date: "desc" },
-      });
-
-      if (!deletedManager)
-        throw `employee_id: ${employee_id} does not exist in Manager table`;
-
-      const deletedManager_ = await prisma.department_manager.delete({
+      const manager = await prisma.department_manager.delete({
         where: {
           employee_id_department_id: {
-            employee_id: BigInt(employee_id ?? "0"),
-            department_id: deletedManager.department_id,
+            employee_id: req.body.employee_id,
+            department_id: req.body.department_id,
           },
         },
       });
-      res.json({ deleted_manager: jsonParseBigInt(deletedManager_) });
+      res.json({ deleted_manager: jsonParseBigInt(manager) });
     } catch (e) {
       res.status(400).json(reportErrors(e));
     }

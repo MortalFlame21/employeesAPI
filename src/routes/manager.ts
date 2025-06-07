@@ -33,9 +33,12 @@ router.post(
 
 // delete manager
 router.delete(
-  "/:employee_id",
+  "/",
   validateRequest({
-    params: z_departmentManagerSchema.pick({ employee_id: true }),
+    body: z_departmentManagerSchema.pick({
+      employee_id: true,
+      department_id: true,
+    }),
   }),
   ManagerController.deleteManager
 );
