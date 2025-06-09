@@ -1,20 +1,16 @@
 {
   "departments": [
     {
-      "id": "d015",
+      "id": "d016",
       "dept_name": "_Internship"
     },
     {
-      "id": "d016",
+      "id": "d017",
       "dept_name": "_Swagonometry"
     },
     {
-      "id": "d017",
-      "dept_name": "_OS Development"
-    },
-    {
       "id": "d018",
-      "dept_name": "_Procrastination"
+      "dept_name": "_OS Development"
     },
     {
       "id": "d019",
