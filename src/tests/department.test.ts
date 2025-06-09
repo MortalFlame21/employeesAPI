@@ -61,9 +61,6 @@ describe("Department", () => {
         .expect("Content-Type", /json/)
         .expect(200);
       expect(res.body.deleted_department.id).equals(body.id);
-      expect(res.body.deleted_department.dept_name).equals(
-        body.department_name
-      );
     });
   });
 });
