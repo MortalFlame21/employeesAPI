@@ -14,7 +14,7 @@ router.get(
 );
 
 // add department
-router.put(
+router.post(
   "/",
   validateRequest({
     body: z_department.pick({ department_name: true }),
