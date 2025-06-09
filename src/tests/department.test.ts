@@ -16,15 +16,54 @@ describe("Department", () => {
     });
   });
 
-  describe.todo("PUT", () => {
-    afterAll(() => {});
+  describe("POST", () => {
+    const body = {
+      id: "d021",
+      department_name: "_Swagging",
+    };
 
-    test("Get 10 departments", () => {});
+    afterAll(async () => {
+      try {
+        await req.delete(`${url}/${body.id}`);
+      } catch (e) {
+        console.log("POST department: afterAll: Error caught.");
+        console.log(e);
+      }
+    });
+
+    test("Create a new department", async () => {
+      const res = await req
+        .post(`${url}`)
+        .send(body)
+        .expect("Content-Type", /json/);
+      expect(res.body.new_department.id).equals(body.id);
+    });
   });
 
-  describe.todo("DELETE", () => {
-    afterAll(() => {});
+  describe("DELETE", () => {
+    const body = {
+      id: "d018",
+      department_name: "_OS Development",
+    };
 
-    test("Delete department", () => {});
+    afterAll(async () => {
+      try {
+        await req.post(`${url}`).send(body);
+      } catch (e) {
+        console.log("DELETE department: afterAll: Error caught.");
+        console.log(e);
+      }
+    });
+
+    test("Create a new department", async () => {
+      const res = await req
+        .delete(`${url}/${body.id}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(res.body.deleted_department.id).equals(body.id);
+      expect(res.body.deleted_department.dept_name).equals(
+        body.department_name
+      );
+    });
   });
 });
