@@ -27,18 +27,10 @@ const DepartmentController = {
 
   createDepartment: async (req: Request, res: Response) => {
     try {
-      const { department_name } = req.body;
-
-      const latestDepartment = await prisma.department.findFirst({
-        orderBy: { id: "desc" },
-      });
-
-      const idNum = parseInt(latestDepartment!.id.replace("d", "")) + 1;
-
       const newDepartment = await prisma.department.create({
         data: {
-          id: `d${String(idNum).padStart(3, "0")}`,
-          dept_name: department_name,
+          id: req.body.id,
+          dept_name: req.body.department_name,
         },
       });
 

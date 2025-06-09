@@ -17,7 +17,7 @@ router.get(
 router.post(
   "/",
   validateRequest({
-    body: z_department.pick({ department_name: true }),
+    body: z_department,
   }),
   DepartmentController.createDepartment
 );
