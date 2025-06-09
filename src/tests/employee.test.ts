@@ -102,7 +102,7 @@ describe(`${url}`, () => {
       },
       department: {
         employee_id: 500073,
-        department_id: "d016",
+        department_id: "d017",
         from_date: "2025-09-10",
         to_date: "2030-01-01",
       },

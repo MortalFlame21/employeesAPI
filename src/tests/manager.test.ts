@@ -112,7 +112,7 @@ describe("Manager", () => {
   describe("DELETE", () => {
     const body = {
       employee_id: 500092,
-      department_id: "d015",
+      department_id: "d016",
       from_date: "2014-10-04",
       to_date: "9999-01-01",
     };
